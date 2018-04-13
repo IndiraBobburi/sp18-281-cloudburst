@@ -108,10 +108,10 @@ func updateCart(w http.ResponseWriter, r *http.Request) {
 
 func viewCart(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	//unmarshall
-	var userid string
-	userid = r.Header.Get("id")
 
+	var userid string
+	//userid = r.Header.Get("id")
+      userid = r.URL.Query().Get("id")
 	if debug { fmt.Println("cart id is :", userid) }
 
 	resp, err := queryObjects("cart", userid)
@@ -124,7 +124,7 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 
 func deleteCart(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	//unmarshall
+
 	var cartid string
 	cartid = r.Header.Get("id")
 
