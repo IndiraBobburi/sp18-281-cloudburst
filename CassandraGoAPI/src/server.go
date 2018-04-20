@@ -56,24 +56,62 @@ func failOnError(err error, msg string) {
 
 
 func pingHandler(formatter *render.Render) http.HandlerFunc {
-
+    return func(w http.ResponseWriter, req *http.Request) {
+        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+    }
 }
 func updateUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-
+    return func(w http.ResponseWriter, req *http.Request) {
+        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+    }
 }
 func deleteUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-
+    return func(w http.ResponseWriter, req *http.Request) {
+        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+    }
 }
 
 
 func getAllUsersHandler(formatter *render.Render) http.HandlerFunc {
-
+    return func(w http.ResponseWriter, req *http.Request) {
+        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+    }
 }
 
 func getUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-
+    return func(w http.ResponseWriter, req *http.Request) {
+        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+    }
 }
 
 func addNewUserHandler(formatter *render.Render) http.HandlerFunc {
+    return func(w http.ResponseWriter, req *http.Request) {
+		var errs []string
+		var created bool = false
 
+		var m user
+    	_ = json.NewDecoder(req.Body).Decode(&m)
+		// m=user{
+		// 	username:"Viraj",
+		// 	password:"Viraj",
+		// }
+		fmt.Println(req.Body);
+		if err := Session.Query(`
+	      INSERT INTO Users (username,password) VALUES (?, ?)`,
+	      m.Username, m.Password).Exec(); err != nil {
+			w.WriteHeader(401)
+	  		w.Write([]byte(err.Error()))
+		  log.Fatal("Table creation error: ", err)
+
+	      errs = append(errs, err.Error())
+		  fmt.Println(errs);
+
+		}else {
+      		created = true
+			fmt.Println(created);
+    	}
+		formatter.JSON(w, http.StatusOK, struct{Status string
+			 User user}{"Added User Successfullty!",m})
+
+	}
 }
