@@ -59,4 +59,30 @@ func main() {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
+
+	obj := &riak.Object{
+	    ContentType:     "application/json",
+	    Charset:         "utf-8",
+	    ContentEncoding: "utf-8",
+	    Value:           []byte("{'user':'data'}"),
+	}
+
+	cmd, err := riak.NewStoreValueCommandBuilder().
+		WithBucket("testBucketName").
+		WithContent(obj).
+		Build()
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	if err := cluster.Execute(cmd); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
+	svc := cmd.(*riak.StoreValueCommand)
+	rsp := svc.Response
+	fmt.Println(reflect.TypeOf(rsp))
+	fmt.Println(rsp.GeneratedKey)
 }
