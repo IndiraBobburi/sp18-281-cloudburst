@@ -74,8 +74,29 @@ func deleteUserByIdHandler(formatter *render.Render) http.HandlerFunc {
 
 func getAllUsersHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
-        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
-    }
+		//var result bson.M
+		var users []user
+		var username,password string
+		query := "SELECT * FROM Users"
+		iter := Session.Query(query).Iter()
+
+
+		for iter.Scan(&username, &password) {
+			users=append(users,user{
+				Username:username,
+				Password:password,
+			});
+		fmt.Println(username, password)
+		}
+		if err := iter.Close(); err != nil {
+			w.WriteHeader(401)
+			w.Write([]byte(err.Error()))
+		log.Fatal(err)
+		}
+
+		fmt.Println("facebook users:", username )
+		formatter.JSON(w, http.StatusOK,users)
+	}
 }
 
 func getUserByIdHandler(formatter *render.Render) http.HandlerFunc {
