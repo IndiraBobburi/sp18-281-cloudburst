@@ -18,3 +18,9 @@
 
 **What are the current blockers/challenges the team is facing?**
 * Adopting to the database which is a new technology to everyone in the team.
+
+# Week 3
+* Continue learning Casandra and Go.
+* Set up first level of the UI.
+* Connection logic.
+* CRUD operations
