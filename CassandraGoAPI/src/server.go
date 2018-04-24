@@ -62,13 +62,35 @@ func pingHandler(formatter *render.Render) http.HandlerFunc {
 }
 func updateUserByIdHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
-        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
-    }
+		vars := mux.Vars(req)
+		m := vars["id"]
+		var u user
+		_ = json.NewDecoder(req.Body).Decode(&u)
+		fmt.Println("User to update:", m,u.Password)
+
+
+		   if err := Session.Query(`UPDATE Users SET password=? WHERE username=?`,
+		   u.Password,m).Exec(); err != nil {
+			w.WriteHeader(401)
+	   		w.Write([]byte(err.Error()))
+		   log.Fatal(err)
+		   }
+
+		formatter.JSON(w, http.StatusOK, struct{ Success string }{"Updated user "+m})
+	}
 }
 func deleteUserByIdHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
-        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
-    }
+		vars := mux.Vars(req)
+		m := vars["id"]
+		if err := Session.Query(`DELETE FROM Users WHERE username=?`,
+		m).Exec(); err != nil {
+			w.WriteHeader(401)
+			w.Write([]byte(err.Error()))
+		log.Fatal(err)
+		}
+		formatter.JSON(w, http.StatusOK, struct{ Success string }{"Deleted user "+m})
+	}
 }
 
 
