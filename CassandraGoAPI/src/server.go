@@ -123,8 +123,22 @@ func getAllUsersHandler(formatter *render.Render) http.HandlerFunc {
 
 func getUserByIdHandler(formatter *render.Render) http.HandlerFunc {
     return func(w http.ResponseWriter, req *http.Request) {
-        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
-    }
+			var username,password string
+			vars := mux.Vars(req)
+  			m := vars["id"]
+			fmt.Println("User to get:", m)
+
+			if err := Session.Query(`SELECT username,password FROM Users WHERE username = ? LIMIT 1`,
+			m).Consistency(gocql.One).Scan(&username, &password); err != nil{
+			w.WriteHeader(401)
+			w.Write([]byte(err.Error()))
+			log.Fatal(err)
+			}
+			fmt.Println("User:", username, password)
+
+			formatter.JSON(w, http.StatusOK, struct{ Username string
+				Password string}{username,password})
+		}
 }
 
 func addNewUserHandler(formatter *render.Render) http.HandlerFunc {
