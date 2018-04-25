@@ -1,0 +1,139 @@
+/*
+LIST OF AMENTIES
+
+"Pool",
+"Gym",
+"Spa",
+"Bicycle-Rental",
+"Pet-Friendly",
+"Wi-Fi",
+"Parking",
+"Restaurant",
+"Disability-Friendly",
+"24-Hour-Front-Desk"*/
+{
+    "hotels": [
+        {
+            "HotelId": 4,
+            "HotelName": "Row NYC",
+            "Location": "New York, NY",
+            "ReviewScore": 7,
+            "Phone": "4433243",
+            "StreetAddress": "700 8th Avenue",
+            "State": "NY",
+            "ZipCode": "10036",
+            "Stars": "4",
+            "Price": 300
+        },
+        {
+            "HotelId": 5,
+            "HotelName": "Sofitel New York",
+            "Location": "New York, NY",
+            "ReviewScore": 9,
+            "Phone": "343546",
+            "StreetAddress": "45 West 44TH Street",
+            "State": "NY",
+            "ZipCode": "10036",
+            "Stars": "3",
+            "Price": 300
+        },
+        {
+            "HotelId": 1,
+            "HotelName": "Fairmont San Jose",
+            "Location": "San Jose, CA",
+            "ReviewScore": 8,
+            "Phone": "66778897",
+            "StreetAddress": "170 South Market Street",
+            "State": "CA",
+            "ZipCode": "95113",
+            "Stars": "4",
+            "Description": "Very good luxury hotel. Good for sightseeing and has nearby restaurants and bars.",
+            "Price": 300,
+            "amenities": [
+                "Pool",
+                "Gym",
+                "Spa",
+                "Bicycle rental"
+            ],
+            "image": "hotel.jpg"
+        },
+        {
+            "HotelId": 2,
+            "HotelName": "Hotel De Anza",
+            "Location": "San Jose, CA",
+            "ReviewScore": 8,
+            "Phone": "33445533",
+            "StreetAddress": "233 West Santa Clara Street",
+            "State": "CA",
+            "ZipCode": "95113",
+            "Stars": "4",
+            "Description": "Excellent city hotel. Close to restaurants and bars with nearby parking areas. Fantastic service. Awesome vibe.",
+            "Price": 200
+        },
+        {
+            "HotelId": 3,
+            "HotelName": "Wyndham Garden San Jose – Silicon Valley",
+            "Location": "San Jose, CA",
+            "ReviewScore": 8,
+            "Phone": "55667722",
+            "StreetAddress": "399 Silicon Valley Boulevard",
+            "State": "CA",
+            "ZipCode": "95138",
+            "Stars": "3",
+            "Description": "Excellent family hotel. Great location.",
+            "Price": 300
+        },
+        {
+            "HotelId": 1,
+            "HotelName": "Fairmont San Jose",
+            "Location": "San Jose, CA",
+            "ReviewScore": 8,
+            "Phone": "66778897",
+            "StreetAddress": "170 South Market Street",
+            "State": "CA",
+            "ZipCode": "95113",
+            "Stars": "4",
+            "Description": "Very good luxury hotel. Good for sightseeing and has nearby restaurants and bars.",
+            "Price": 220,
+            "amenities": [
+                "Pool",
+                "Gym",
+                "Spa",
+                "Bicycle-Rental",
+                "Pet-Friendly",
+                "Wi-Fi",
+                "Parking",
+                "Restaurant",
+                "Disability-Friendly",
+                "24-Hour-Front-Desk"
+            ],
+            "image": "hotel.jpg"
+        }
+    ]
+}
+
+
+
+//add hotel json
+
+//{"HotelName" : "ETY","Location" : "Vegas", "ReviewScore" : "9","Phone" :"888454","StreetAddress" : "el camino",
+//    "State" : "CA","ZipCode": "884","Stars" : "4","Description" : "Beautiful interior", "DeluxRoomCount" : "100",
+//    "StandardRoomCount" : "110",
+//    "KingRoomCount":"20",
+//    "QueenRoomCount" : "120",
+//    "DoubleRoomCount" : "130",
+//    "DeluxRoomPrice" : "230",
+//    "StandardRoomPrice": "678",
+//    "KingRoomPrice" : "332",
+//    "QueenRoomPrice" : "321",
+//    "DoubleRoomPrice" : "232",
+//    "image" : "hotel.jpg",
+//    "amenities": {"Pool": "true", "Gym": "true", "Spa": "true", "Bicycle-Rental": "false"},
+//
+//    "free_cancel_delux": "true",
+//    "free_cancel_standard": "false",
+//    "free_cancel_king": "false",
+//    "free_cancel_queen": "true",
+//    "free_cancel_double": "false",
+//    "score": "0"
+//}
