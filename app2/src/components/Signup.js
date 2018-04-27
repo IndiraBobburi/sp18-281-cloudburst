@@ -1,8 +1,27 @@
 import { Route, withRouter,BrowserRouter } from 'react-router-dom';
 import '../App.css';
 import React, { Component } from 'react';
+import * as API from '../api/API.js';
 
 class Signup extends Component {
+    state = {
+        firstName: '',
+        lastName:'',
+        email:'',
+        password:'',
+        confirmPassword:''
+
+    }
+    signUp  = () => {
+        var data = this.state;
+        API.signup(data)
+            .then((res) => {
+                console.log(res);
+                this.props.history.push("/");
+            });
+    }
+
+
   render() {
     return (  
         <div className="row">
@@ -41,7 +60,7 @@ class Signup extends Component {
                         <input id="OptIn" name="OptIn" type="checkbox" value="true"></input>
                         <label for="OptIn">Send me emails about future deals and features</label>
                 </div>
-                    <button className="login-button" type="submit" id="btnNext">Create Account</button>
+                    <button onClick={ () =>{this.signUp()}} className="login-button" type="submit" id="btnNext">Create Account</button>
                     <p>
                         The Counter may send email communications about your account activity and other updates from time to time. These email communications may be disabled on your My Account page. We will never give your contact information to third parties.
                     </p>

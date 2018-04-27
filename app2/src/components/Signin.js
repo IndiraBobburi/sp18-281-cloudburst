@@ -1,8 +1,20 @@
 import { Route, withRouter,BrowserRouter } from 'react-router-dom';
 import '../App.css';
 import React, { Component } from 'react';
-
+import * as API from '../api/API.js';
 class Signin extends Component {
+    state = {
+        email:'',
+        password:''
+    }
+    signIn  = () => {
+        var data = this.state;
+        API.signin(data)
+            .then((res) => {
+                console.log(res);
+                this.props.history.push("/");
+            });
+    }
   render() {
     return (  
         <div className="row">
@@ -19,7 +31,7 @@ class Signin extends Component {
                     <label className="login-heading-style" for="Password">Password</label><br></br>
                     <input className="login-textbox-style" id="Password" maxlength="1024" name="Password" type="password"></input>
                    </div>
-                <button className="login-button" id="btnLogin" type="submit">Login</button>
+                <button onClick={ () =>{this.signIn()}}  className="login-button" id="btnLogin" type="submit">Login</button>
 
 
             </form>
