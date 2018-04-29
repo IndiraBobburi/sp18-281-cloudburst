@@ -6,12 +6,68 @@ import (
 	"log"
 	"io/ioutil"
 	"encoding/json"
+	riak "github.com/basho/riak-go-client"
+	util "github.com/basho/taste-of-riak/go/util"
 )
 
+var server1 = "localhost:8002"
+var server2 = "localhost:8003"
+var server3 = "localhost:8004"
+
 func handler(w http.ResponseWriter, r *http.Request) {
-	var name string
-	name = "Indy"
-	fmt.Fprintf(w, "Hi there, I love %s!",name)
+	fmt.Fprintf(w, "Hi there, Welcome to goBurger")
+}
+
+func init(){
+	var err error
+
+	o := &riak.NewClientOptions{
+		RemoteAddresses: []string{server1, server2, server3},
+	}
+
+	var c *riak.Client
+	c, err = riak.NewClient(o)
+	if err != nil {
+		util.ErrExit(err)
+	}
+
+	defer func() {
+		if err := c.Stop(); err != nil {
+			util.ErrExit(err)
+		}
+	}()
+
+	ping := &riak.PingCommand{}
+	if err = c.Execute(ping); err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("cluster ping passed")
+	}
+
+	/*c1 := NewClient(server1)
+	msg, err := c1.Ping( )
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Riak Ping Server1: ", msg)
+	}
+
+	c2 := NewClient(server2)
+	msg, err = c2.Ping( )
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Riak Ping Server2: ", msg)
+	}
+
+	c3 := NewClient(server3)
+	msg, err = c3.Ping( )
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Riak Ping Server3: ", msg)
+	}*/
+
 }
 
 func main() {
@@ -240,6 +296,4 @@ func order(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(output)
-
-
 }
