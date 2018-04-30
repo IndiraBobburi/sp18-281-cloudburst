@@ -28,9 +28,11 @@ func NewServer() *negroni.Negroni {
 }
 func init() {
   var err error
-   cluster := gocql.NewCluster("localhost")
 
+
+  cluster := gocql.NewCluster("13.56.226.154","18.216.80.30","52.35.81.28")
   cluster.Keyspace = "shop"
+  cluster.Consistency = gocql.One
   Session, err = cluster.CreateSession()
   if err != nil {
     panic(err)
@@ -56,12 +58,12 @@ func failOnError(err error, msg string) {
 
 
 func pingHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
-        formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
-    }
+	return func(w http.ResponseWriter, req *http.Request) {
+		formatter.JSON(w, http.StatusOK, struct{ Test string }{"API version 1.0 alive!"})
+	}
 }
 func updateUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		m := vars["id"]
 		var u user
@@ -80,7 +82,7 @@ func updateUserByIdHandler(formatter *render.Render) http.HandlerFunc {
 	}
 }
 func deleteUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 		vars := mux.Vars(req)
 		m := vars["id"]
 		if err := Session.Query(`DELETE FROM Users WHERE username=?`,
@@ -95,7 +97,7 @@ func deleteUserByIdHandler(formatter *render.Render) http.HandlerFunc {
 
 
 func getAllUsersHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 		//var result bson.M
 		var users []user
 		var username,password string
@@ -122,7 +124,7 @@ func getAllUsersHandler(formatter *render.Render) http.HandlerFunc {
 }
 
 func getUserByIdHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 			var username,password string
 			vars := mux.Vars(req)
   			m := vars["id"]
@@ -142,7 +144,7 @@ func getUserByIdHandler(formatter *render.Render) http.HandlerFunc {
 }
 
 func addNewUserHandler(formatter *render.Render) http.HandlerFunc {
-    return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 		var errs []string
 		var created bool = false
 
