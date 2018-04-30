@@ -6,13 +6,48 @@ import (
 	"log"
 	"io/ioutil"
 	"encoding/json"
-	riak "github.com/basho/riak-go-client"
-	util "github.com/basho/taste-of-riak/go/util"
+	"time"
+	"bytes"
+	"github.com/satori/go.uuid"
+	"strings"
 )
 
-var server1 = "localhost:8002"
-var server2 = "localhost:8003"
-var server3 = "localhost:8004"
+var debug = true
+var server1 = "http://localhost:9000"
+var server2 = "http://localhost:9001"
+var server3 = "http://localhost:9002"
+
+type Client struct {
+	Endpoint string
+	*http.Client
+}
+
+var tr = &http.Transport{
+	MaxIdleConns:       10,
+	IdleConnTimeout:    30 * time.Second,
+	DisableCompression: true,
+}
+
+func NewClient(server string) *Client {
+	return &Client{
+		Endpoint:  	server,
+		Client: 	&http.Client{Transport: tr},
+	}
+}
+
+func (c *Client) Ping() (string, error) {
+	resp, err := c.Get(c.Endpoint + "/ping" )
+	if err != nil {
+		fmt.Println("[RIAK DEBUG] " + err.Error())
+		return "Ping Error!", err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if debug { fmt.Println("[RIAK DEBUG] GET: " + c.Endpoint + "/ping => " + string(body)) }
+	return string(body), nil
+}
+
+//var c *riak.Client
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, Welcome to goBurger")
@@ -21,30 +56,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func init(){
 	var err error
 
-	o := &riak.NewClientOptions{
-		RemoteAddresses: []string{server1, server2, server3},
-	}
-
-	var c *riak.Client
-	c, err = riak.NewClient(o)
-	if err != nil {
-		util.ErrExit(err)
-	}
-
-	defer func() {
-		if err := c.Stop(); err != nil {
-			util.ErrExit(err)
-		}
-	}()
-
-	ping := &riak.PingCommand{}
-	if err = c.Execute(ping); err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("cluster ping passed")
-	}
-
-	/*c1 := NewClient(server1)
+	c1 := NewClient(server1)
 	msg, err := c1.Ping( )
 	if err != nil {
 		log.Fatal(err)
@@ -66,70 +78,48 @@ func init(){
 		log.Fatal(err)
 	} else {
 		log.Println("Riak Ping Server3: ", msg)
-	}*/
-
+	}
 }
 
 func main() {
 	http.HandleFunc("/hi", handler)
 	http.HandleFunc("/getRestaurants", getRestaurants)
+	http.HandleFunc("/getMenu", getMenu)
 	http.HandleFunc("/addToCart", addToCart)
 	http.HandleFunc("/viewCart", viewCart)
 	http.HandleFunc("/order", order)
-	http.HandleFunc("/orderStatus", orderStatus)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func getRestaurants(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+	pincode := r.URL.Query().Get("pincode")
+
+	if pincode != "" {
+		c := NewClient(server1)
+		resp, err := c.Get(c.Endpoint + "/buckets/restaurants/keys/"+pincode )
+		if err != nil {
+			fmt.Println("[RIAK DEBUG] " + err.Error())
+		}
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		w.Write(body)
 	}
-
-	// Unmarshal
-	var pincode Pincode
-	err = json.Unmarshal(b, &pincode)
-	fmt.Printf("%+v\n", pincode)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	//TODO: Get the restaurant list from the db
-
-	restaurants := Restaurant{
-		Id:     1,
-		Name:   "Ulavacharu",
-		Address:	"xyz",
-		Phone:	"320-234-2384",
-		Menu: []Item {
-			Item{
-				Id:	1,
-				Price: 2.0,
-				Name: "Idly",
-				Description: "South Indian",
-			},
-			Item{
-				Id:	1,
-				Price: 2.0,
-				Name: "Idly",
-				Description: "South Indian",
-			},
-		},
-	}
-
-	output, err := json.Marshal(restaurants)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
-	w.Write(output)
-
 }
 
+func getMenu(w http.ResponseWriter, r *http.Request) {
+	c := NewClient(server1)
+	resp, err := c.Get(c.Endpoint + "/buckets/restaurants/keys/menu" )
+
+	if err != nil {
+		fmt.Println("[RIAK DEBUG] " + err.Error())
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	w.Header().Set("content-type", "application/json")
+	w.Write(body)
+}
 
 func addToCart(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
@@ -142,8 +132,14 @@ func addToCart(w http.ResponseWriter, r *http.Request) {
 	// Unmarshal
 	var cart Cart
 	err = json.Unmarshal(b, &cart)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
 
-	if cart.Id == 0{
+	fmt.Printf("%+v\n", cart)
+
+	if cart.Id == "" {
 		http.Error(w, "ID is not sent", 500)
 		return
 	}
@@ -161,139 +157,83 @@ func addToCart(w http.ResponseWriter, r *http.Request) {
 	//TODO: Loop through items and print error by checking id and qty
 
 
-	fmt.Printf("%+v\n", cart)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	//TODO: Do the db insertion
-
 	output, err := json.Marshal(cart)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(output)
 
+	val := bytes.NewBuffer(output)
 
-}
+	c := NewClient(server1)
+	resp, err := c.Post(c.Endpoint + "/buckets/cart/keys/"+cart.Id+"?returnbody=true",
+		"application/json", val )
 
-func orderStatus(w http.ResponseWriter, r *http.Request){
-	orderId := r.URL.Query().Get("orderId")
-	if orderId != "" {
-		//TODO: query the db and return the order status
-		fmt.Println("Order id is ",orderId)
-	}
-	//orderstatus := "Order id"+orderId +"is being processed"
-	orderstatus:= fmt.Sprintf( "Order id %v is being processed", orderId)
-	output, err := json.Marshal(orderstatus)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		fmt.Println("[RIAK DEBUG] " + err.Error())
 	}
+	defer resp.Body.Close()
+
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write(output)
 }
 
 
 func viewCart(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
+	//unmarshall
+	var cartid string
+	cartid = r.Header.Get("cartid")
+
+	fmt.Println("cart id is :", cartid)
+
+	c := NewClient(server1)
+	resp, err := c.Get(c.Endpoint + "/buckets/cart/keys/"+ cartid )
+
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+		fmt.Println("[RIAK DEBUG] " + err.Error())
 	}
+	defer resp.Body.Close()
 
-	// Unmarshal
-	var cart Cart
-	err = json.Unmarshal(b, &cart)
-
-	if cart.Id == 0{
-		http.Error(w, "ID is not sent", 500)
-		return
-	}
-
-	if cart.RestaurantId == 0{
-		http.Error(w, "Restaurant ID is not sent", 500)
-		return
-	}
-
-	if cart.Items == nil{
-		http.Error(w, "Items null", 500)
-		return
-	}
-
-	//TODO: Loop through items and print error by checking id and qty
-
-
-	fmt.Printf("%+v\n", cart)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	//TODO: Do the db insertion
-
-	output, err := json.Marshal(cart)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(output)
-
-
+	body, err := ioutil.ReadAll(resp.Body)
+	w.Write(body)
 }
 
 func order(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+	if r.Method == "POST" {
+		c := NewClient(server1)
+		uuid, _ := uuid.NewV4()
+		value := "Order Placed"
+
+		reqbody := "{\"Id\": \"" +
+			uuid.String() +
+			"\",\"OrderStatus\": \"" +
+			value +
+			"\"}"
+
+		resp, err := c.Post(c.Endpoint + "/buckets/orders/keys/"+ uuid.String() +"?returnbody=true",
+			"application/json", strings.NewReader(reqbody) )
+		if err != nil {
+			fmt.Println("[RIAK DEBUG] " + err.Error())
+		}
+		defer resp.Body.Close()
+
+		body, err := ioutil.ReadAll(resp.Body)
+		w.WriteHeader(http.StatusOK)
+		w.Write(body)
 	}
+	if r.Method == "GET" {
+		var orderid string
+		orderid = r.URL.Query().Get("orderId")
+		if orderid != "" {
+			c := NewClient(server1)
+			resp, err := c.Get(c.Endpoint + "/buckets/cart/keys/"+ orderid )
+			if err != nil {
+				fmt.Println("[RIAK DEBUG] " + err.Error())
+			}
+			defer resp.Body.Close()
 
-	// Unmarshal
-	var cart Cart
-	err = json.Unmarshal(b, &cart)
-
-	if cart.Id == 0{
-		http.Error(w, "ID is not sent", 500)
-		return
+			body, err := ioutil.ReadAll(resp.Body)
+			w.Write(body)
+		}
 	}
-
-	if cart.RestaurantId == 0{
-		http.Error(w, "Restaurant ID is not sent", 500)
-		return
-	}
-
-	if cart.Items == nil{
-		http.Error(w, "Items null", 500)
-		return
-	}
-
-	//TODO: Loop through items and print error by checking id and qty
-
-
-	fmt.Printf("%+v\n", cart)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-
-	//TODO: Do the db insertion
-
-	output, err := json.Marshal(cart)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(output)
 }
