@@ -1,0 +1,278 @@
+{
+	"id": "7c553649-6495-4281-9a56-38ed3bf95b35",
+	"name": "cloudburst",
+	"description": null,
+	"auth": null,
+	"events": null,
+	"variables": null,
+	"order": [
+		"2ea34ecb-1fb2-4569-ba54-9977dff7a43d",
+		"f6765922-d98e-4b18-90e7-1a47d8037fda",
+		"4e6638a7-59a0-4d60-b655-ae7b5a15b81f",
+		"856d3b52-b507-47d3-962f-ef2e237914d5",
+		"b55fc879-aa81-40fd-9bae-b95e230e445f",
+		"76490bfa-a104-4fb5-b9f6-4a43fe07b90e",
+		"b5319e83-8ed7-48d7-850e-fe885afb533a"
+	],
+	"folders_order": [
+		"14300bcd-3535-46c9-8fba-b9f9284abd2d"
+	],
+	"folders": [
+		{
+			"id": "14300bcd-3535-46c9-8fba-b9f9284abd2d",
+			"name": "db",
+			"description": null,
+			"auth": null,
+			"events": null,
+			"collection": "7c553649-6495-4281-9a56-38ed3bf95b35",
+			"folder": null,
+			"order": [
+				"b21c7d5e-ea60-4215-8f59-8b05d6444fbe",
+				"c30feebd-f7f9-4b61-a1ad-a08173b80ff9",
+				"99107a26-6e49-4a6c-898c-cae195e7a797"
+			],
+			"folders_order": []
+		}
+	],
+	"requests": [
+		{
+			"id": "2ea34ecb-1fb2-4569-ba54-9977dff7a43d",
+			"name": "welcome",
+			"url": "http://localhost:8080/hi",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": ""
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"rawModeData": "{Task: \"AWS essentials\"}",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "4e6638a7-59a0-4d60-b655-ae7b5a15b81f",
+			"name": "get menu",
+			"url": "http://localhost:8080/getMenu",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": ""
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"rawModeData": "",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "76490bfa-a104-4fb5-b9f6-4a43fe07b90e",
+			"name": "create order",
+			"url": "http://localhost:8080/order",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "856d3b52-b507-47d3-962f-ef2e237914d5",
+			"name": "add to cart",
+			"url": "http://localhost:8080/addToCart",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": ""
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"rawModeData": "{\n    \"id\": \"abcd\",\n    \"restaurantId\": 1,\n    \"items\": [\n        {\n            \"id\": 1,\n            \"quantity\":1\n        },\n        {\n            \"id\": 2,\n            \"quantity\":2\n        }\n    ]\n}",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "99107a26-6e49-4a6c-898c-cae195e7a797",
+			"name": "viewcart",
+			"url": "localhost:9000/buckets/cart/keys/abcd",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "14300bcd-3535-46c9-8fba-b9f9284abd2d",
+			"rawModeData": "{\n    \"menu\" : [ \n    \t{\n\t    \t\"id\": 1,\n\t\t    \"name\": \"veggie burger\",\n\t\t    \"price\": 14.0,\n\t\t    \"description\": \"Homemade delicious burger with roasted onions, peppers\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"cheese burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"Burger with finely chopped cheese\"\n\t    },\n\t    {\n\t    \t\"id\": 3,\n\t\t    \"name\": \"bacon burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"bacon Burger\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"steak burger\",\n\t\t    \"price\": 18.0,\n\t\t    \"description\": \"steak Burger with finely chopped cheese\"\n\t    }\n    ]\n}",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "b21c7d5e-ea60-4215-8f59-8b05d6444fbe",
+			"name": "localhost:8002/buckets/restaurants/keys/95110",
+			"url": "localhost:9000/buckets/users/keys/john_smith",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "14300bcd-3535-46c9-8fba-b9f9284abd2d",
+			"rawModeData": "{\n    \"menu\" : [ \n    \t{\n\t    \t\"id\": 1,\n\t\t    \"name\": \"veggie burger\",\n\t\t    \"price\": 14.0,\n\t\t    \"description\": \"Homemade delicious burger with roasted onions, peppers\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"cheese burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"Burger with finely chopped cheese\"\n\t    },\n\t    {\n\t    \t\"id\": 3,\n\t\t    \"name\": \"bacon burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"Burger with finely chopped cheese\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"steak burger\",\n\t\t    \"price\": 18.0,\n\t\t    \"description\": \"Burger with finely chopped cheese\"\n\t    }\n    ]\n}",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "b5319e83-8ed7-48d7-850e-fe885afb533a",
+			"name": "get order",
+			"url": "http://localhost:8080/order?orderid=4b908778-d7e7-4ed0-962a-f4945c3c09d8",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "orderid",
+					"value": "4b908778-d7e7-4ed0-962a-f4945c3c09d8",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "b55fc879-aa81-40fd-9bae-b95e230e445f",
+			"name": "view cart",
+			"url": "localhost:8080/viewCart",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "cartid",
+					"value": "abcd",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"headers": "cartid: abcd\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "c30feebd-f7f9-4b61-a1ad-a08173b80ff9",
+			"name": "menu",
+			"url": "localhost:9000/buckets/restaurants/keys/menu",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": "14300bcd-3535-46c9-8fba-b9f9284abd2d",
+			"rawModeData": "{\n    \"menu\" : [ \n    \t{\n\t    \t\"id\": 1,\n\t\t    \"name\": \"veggie burger\",\n\t\t    \"price\": 14.0,\n\t\t    \"description\": \"Homemade delicious burger with roasted onions, peppers\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"cheese burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"Burger with finely chopped cheese\"\n\t    },\n\t    {\n\t    \t\"id\": 3,\n\t\t    \"name\": \"bacon burger\",\n\t\t    \"price\": 16.0,\n\t\t    \"description\": \"bacon Burger\"\n\t    },\n\t    {\n\t    \t\"id\": 2,\n\t\t    \"name\": \"steak burger\",\n\t\t    \"price\": 18.0,\n\t\t    \"description\": \"steak Burger with finely chopped cheese\"\n\t    }\n    ]\n}",
+			"headers": "Content-Type: application/json\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "f6765922-d98e-4b18-90e7-1a47d8037fda",
+			"name": "get restaurants",
+			"url": "http://localhost:8080/getRestaurants?pincode=95110",
+			"description": "",
+			"data": [],
+			"dataMode": "raw",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": ""
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [
+				{
+					"key": "pincode",
+					"value": "95110",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"rawModeData": "\n\n",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		}
+	]
+}
