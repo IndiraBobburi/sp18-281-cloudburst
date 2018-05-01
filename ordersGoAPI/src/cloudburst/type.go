@@ -10,8 +10,10 @@ type Restaurant struct {
 	Name string `json:"name"`
 	Address string `json:"address"`
 	Phone string `json:"phone"`
-	Menu []Item `json:"menu"`
+}
 
+type RestaurantList struct {
+	Restaurants []Restaurant `json:"restaurantlist"`
 }
 
 type Item struct {
@@ -21,13 +23,23 @@ type Item struct {
 	Description string `json:"description"`
 }
 
+type ItemList struct {
+	Menu []Item `json:"menu"`
+}
+
 type Cart struct{
-	Id uint64 `json:"id"`
+	UserId uint64 `json:"userid"`
+	Id string `json:"id"`
 	RestaurantId uint64 `json:"restaurantId"`
 	Items []CartItem `json:"items"`
 }
 
 type CartItem struct {
-	Id uint64 `json:"id"`
+	Id uint64 `json:"id"` //item id
 	Quantity uint8 `json:"quantity"`
+}
+
+type Order struct {
+	Id             	string
+	OrderStatus 	string
 }
