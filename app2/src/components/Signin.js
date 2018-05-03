@@ -19,6 +19,9 @@ class Signin extends Component {
                 this.props.history.push("/");
             });
     }
+    gotoSignup = () =>{
+        this.props.history.push("/signup");
+    }
   render() {
     return (  
         <div className="row">
@@ -48,9 +51,12 @@ class Signin extends Component {
                                });
                            }}></input>
                    </div>
-                <button onClick={ () =>{this.signIn()}}  className="login-button" id="btnLogin" type="button">Login</button>
-
-
+                <button onClick={ () =>{this.signIn()}}  className="login-button" id="btnLogin" type="button">LOGIN</button>
+                <div>
+                    If you are a new user, Please Sign Up!
+                   <div> <button onClick={ () =>{this.gotoSignup()}}  className="login-button" id="btnLogin" type="button">SIGN UP</button>
+                </div>
+                </div>
             </form>
         </div>
             <div className="col-md-4">

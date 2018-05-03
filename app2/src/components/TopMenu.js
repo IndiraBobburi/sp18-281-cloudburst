@@ -19,6 +19,9 @@ class TopMenu extends Component {
     gotoSignup = () =>{
         this.props.history.push("/signup");
     }
+    gotoCart = () =>{
+        this.props.history.push("/cart");
+    }
   render() {
     return (
         <div className="row">
@@ -39,12 +42,12 @@ class TopMenu extends Component {
                   </div>
                   <div className="col-md-3">
                       <div>
-                          <span onClick={ () =>{this.gotoSignup()}}>SIGN UP</span>
+                          <span onClick={ () =>{this.gotoSignin()}}>SIGN IN</span>
                       </div>
                   </div>
                   <div className="col-md-3">
                       <div>
-                          <span onClick={ () =>{this.gotoSignin()}}>SIGN IN</span>
+                          <span onClick={ () =>{this.gotoCart()}}>CART</span>
                       </div>
                   </div>
 

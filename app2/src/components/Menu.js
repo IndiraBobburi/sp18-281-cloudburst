@@ -21,7 +21,7 @@ class Menu extends Component {
             });
     }
     getMenu = (data) =>{
-        //localStorage.setItem("ResId",data)
+        localStorage.setItem("ResId",data)
         this.props.history.push("/Items");
     }
   render() {

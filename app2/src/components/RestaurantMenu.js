@@ -6,19 +6,70 @@ class RestaurantMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            menuItems: []
+            menuItems: [],
+            cart:{}
         }
     }
 componentWillMount(){
-//var id =  localStorage.getItem("ResId");
     var self = this.state;
            API.getMenu()
                .then((res) => {
                    console.log(res);
                    self.menuItems = res.menu;
-                   this.setState(self);
+                   API.getCart('1234')
+                       .then((res) => {
+                           console.log(res);
+                           self.cart = res;
+                           this.setState(self);
+                       });
+                   //this.setState(self);
                });
+
+
 }
+    addToCart = (Itemid)=>{
+        var cart = this.state.cart;
+        var new_cart=null;
+        var resId = localStorage.getItem("ResId");
+        var self = this.state;
+        if(resId == cart.restaurantId){
+var items = cart.items;
+var notFound = true;
+for(var i = 0;i<items.length;i++){
+    if(parseInt(items[i].id) === parseInt(Itemid)){
+        items[i].quantity = items[i].quantity + 1;
+        notFound = false;
+    }
+}if(notFound == true){
+                cart.items.push({
+                    "id": Itemid,
+                    "quantity":1
+                });
+            }
+        }
+
+        else{
+            cart = {
+                "id": "abcd",
+                "restaurantId": resId,
+                "items": [
+                    {
+                        "id": Itemid,
+                        "quantity":1
+                    }
+                    ]
+
+            }
+        }
+       // localStorage.setItem("cart",cart);
+        API.addToCart(cart)
+            .then((res) => {
+                console.log(res);
+                self.cart = cart;
+                this.setState(self);
+            });
+
+    }
   render() {
       var ResMenu = [];
       var data = this.state.menuItems;
@@ -42,7 +93,7 @@ componentWillMount(){
                   </div>
               </div>
           );
-      });
+      },this);
     return (
         <div className="row">
             <div className="col-md-2">

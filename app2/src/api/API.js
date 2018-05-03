@@ -11,7 +11,8 @@ export const signin = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+        credentials:'include',
+        body: JSON.stringify(payload)
     }).then(res => {
         return res.json();
     })
@@ -27,7 +28,8 @@ export const signup = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+        credentials:'include',
+        body: JSON.stringify(payload)
     }).then(res => {
         return res.json();
     })
@@ -66,6 +68,21 @@ export const getRestaurants = (payload) =>
                     }
                 ]
             }
+            var cart = {
+                "id": "abcd",
+                "restaurantId": 1,
+                "items": [
+                    {
+                        "id": 1,
+                        "quantity":1
+                    },
+                    {
+                        "id": 2,
+                        "quantity":2
+                    }
+                ]
+            };
+            localStorage.setItem("cart", cart);
             return res;
         });
 
@@ -114,7 +131,80 @@ export const getMenu = () =>
             return res;
         });
 
-export const getOrders = (payload) =>
+export const addToCart = (payload) =>
+    fetch(`${api_server}/addToCart`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include',
+        body: JSON.stringify(payload)
+    }).then(res => {
+        //localStorage.setItem("cart",JSON.stringify(payload));
+        return res.json();
+    })
+        .catch(error => {
+            console.log("This is error");
+           // localStorage.setItem("cart",JSON.stringify(payload));
+            // return error;
+            var res = "success";
+            return res;
+        });
+
+
+export const getCart = (payload) =>
+    fetch(`${api_server}/viewCart?userId=`+payload, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'
+    }).then(res => {
+        return res.json();
+    })
+        .catch(error => {
+            console.log("This is error");
+            // return error;
+            var res = {
+                "id": "abcd",
+                "restaurantId": 1,
+                "items": [
+                    {
+                        "id": 1,
+                        "quantity":1
+                    },
+                    {
+                        "id": 2,
+                        "quantity":2
+                    }
+                ]
+            };
+            return res;
+        });
+
+export const order = (payload) =>
+    fetch(`${api_server}/order`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include',
+        body: JSON.stringify(payload)
+    }).then(res => {
+        //localStorage.setItem("cart",JSON.stringify(payload));
+        return res.json();
+    })
+        .catch(error => {
+            console.log("This is error");
+            // localStorage.setItem("cart",JSON.stringify(payload));
+            // return error;
+            var res = "success";
+            return res;
+        });
+export const getAllOrders = (payload) =>
     fetch(`${api_server}/orders`, {
         method: 'GET',
         headers: {

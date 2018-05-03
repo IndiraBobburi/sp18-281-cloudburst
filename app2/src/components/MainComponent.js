@@ -8,6 +8,7 @@ import Signin from './Signin.js';
 import Signup from './Signup.js';
 import Menu from './Menu.js';
 import RestaurantMenu from './RestaurantMenu.js';
+import Cart from './Cart.js';
 
 class MainComponent extends Component {
   render() {
@@ -47,6 +48,13 @@ class MainComponent extends Component {
         (
             <div>
                 <RestaurantMenu/>
+            </div>
+        )}/>
+
+    <Route exact path="/cart" render={() =>
+        (
+            <div>
+                <Cart/>
             </div>
         )}/>
 
