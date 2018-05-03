@@ -51,39 +51,7 @@ export const getRestaurants = (payload) =>
     })
         .catch(error => {
             console.log("This is error");
-           // return error;
-            var res = {
-                "restaurantlist" : [
-                    {
-                        "id": 1,
-                        "name": "mcd",
-                        "address": "xyz",
-                        "phone": "320-234-2384"
-                    },
-                    {
-                        "id": 2,
-                        "name": "burgerking",
-                        "address": "abc",
-                        "phone": "320-234-3456"
-                    }
-                ]
-            }
-            var cart = {
-                "id": "abcd",
-                "restaurantId": 1,
-                "items": [
-                    {
-                        "id": 1,
-                        "quantity":1
-                    },
-                    {
-                        "id": 2,
-                        "quantity":2
-                    }
-                ]
-            };
-            localStorage.setItem("cart", cart);
-            return res;
+            return error;
         });
 
 export const getMenu = () =>
@@ -99,36 +67,7 @@ export const getMenu = () =>
     })
         .catch(error => {
             console.log("This is error");
-            // return error;
-            var res = {
-                "menu" : [
-                    {
-                        "id": 1,
-                        "name": "veggie burger",
-                        "price": 14.0,
-                        "description": "Homemade delicious burger with roasted onions, peppers"
-                    },
-                    {
-                        "id": 2,
-                        "name": "cheese burger",
-                        "price": 16.0,
-                        "description": "Burger with finely chopped cheese"
-                    },
-                    {
-                        "id": 3,
-                        "name": "bacon burger",
-                        "price": 16.0,
-                        "description": "bacon Burger"
-                    },
-                    {
-                        "id": 2,
-                        "name": "steak burger",
-                        "price": 18.0,
-                        "description": "steak Burger with finely chopped cheese"
-                    }
-                ]
-            }
-            return res;
+            return error;
         });
 
 export const addToCart = (payload) =>
@@ -146,10 +85,7 @@ export const addToCart = (payload) =>
     })
         .catch(error => {
             console.log("This is error");
-           // localStorage.setItem("cart",JSON.stringify(payload));
-            // return error;
-            var res = "success";
-            return res;
+            return error;
         });
 
 
@@ -166,22 +102,8 @@ export const getCart = (payload) =>
     })
         .catch(error => {
             console.log("This is error");
-            // return error;
-            var res = {
-                "id": "abcd",
-                "restaurantId": 1,
-                "items": [
-                    {
-                        "id": 1,
-                        "quantity":1
-                    },
-                    {
-                        "id": 2,
-                        "quantity":2
-                    }
-                ]
-            };
-            return res;
+            return error;
+           // return res;
         });
 
 export const order = (payload) =>
@@ -201,8 +123,7 @@ export const order = (payload) =>
             console.log("This is error");
             // localStorage.setItem("cart",JSON.stringify(payload));
             // return error;
-            var res = "success";
-            return res;
+            return error;
         });
 export const getAllOrders = (payload) =>
     fetch(`${api_server}/orders`, {
