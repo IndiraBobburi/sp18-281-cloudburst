@@ -6,10 +6,10 @@ type Pincode struct {
 }
 
 type Restaurant struct {
-	Id uint64 `json:"id"`
-	Name string `json:"name"`
+	Id      uint64 `json:"id"`
+	Name    string `json:"name"`
 	Address string `json:"address"`
-	Phone string `json:"phone"`
+	Phone   string `json:"phone"`
 }
 
 type RestaurantList struct {
@@ -17,9 +17,9 @@ type RestaurantList struct {
 }
 
 type Item struct {
-	Id uint64 `json:"id"`
-	Name string `json:"name"`
-	Price float64 `json:"price"`
+	Id          uint64 `json:"id"`
+	Name        string `json:"name"`
+	Price      float64 `json:"price"`
 	Description string `json:"description"`
 }
 
@@ -27,19 +27,26 @@ type ItemList struct {
 	Menu []Item `json:"menu"`
 }
 
-type Cart struct{
-	UserId uint64 `json:"userid"`
-	Id string `json:"id"`
-	RestaurantId uint64 `json:"restaurantId"`
-	Items []CartItem `json:"items"`
-}
-
 type CartItem struct {
-	Id uint64 `json:"id"` //item id
+	Id      uint64 `json:"id"` //item id
 	Quantity uint8 `json:"quantity"`
 }
 
+type Cart struct{
+	Id           string `json:"id"`
+	RestaurantId uint64 `json:"restaurantId"`
+	Items    []CartItem `json:"items"`
+}
+
 type Order struct {
-	Id             	string
-	OrderStatus 	string
+	UserId       string `json:"userid"`
+	RestaurantId uint64 `json:"restaurantId"`
+	Items    []CartItem `json:"items"`
+	Id           string `json:"id"`   //will be same as cart id and cart gets deleted.
+	OrderStatus  string `json:"status"`
+}
+
+type User struct {
+	Id       string `json:"id"`
+	Password string `json:"id"`
 }

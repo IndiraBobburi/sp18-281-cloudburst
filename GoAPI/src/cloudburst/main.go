@@ -4,18 +4,15 @@ import (
 	"net/http"
 	"fmt"
 	"log"
-	"io/ioutil"
-	"github.com/satori/go.uuid"
 	"github.com/basho/riak-go-client"
-	"encoding/json"
 )
 
 var debug = true
 
 //connect to tcp ports for cluster
-var s1 = "localhost:8002"
-var s2 = "localhost:8003"
-var s3 = "localhost:8004"
+var s1 = "54.183.106.118:8087"   //"localhost:8002"
+var s2 = "13.57.3.195:8087"      //"localhost:8003"
+var s3 = "54.153.107.186:8087"   //"localhost:8004"
 
 var cluster *riak.Cluster
 
@@ -74,9 +71,9 @@ func main() {
 	http.HandleFunc("/hi", handler)
 	http.HandleFunc("/getRestaurants", getRestaurants)
 	http.HandleFunc("/getMenu", getMenu)
-	http.HandleFunc("/addToCart", addToCart)
-	http.HandleFunc("/viewCart", viewCart)
+	http.HandleFunc("/cart", cart)
 	http.HandleFunc("/order", order)
+	http.HandleFunc("/orders", getOrders)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 	defer func() {
 		if err := cluster.Stop(); err != nil {
@@ -85,7 +82,7 @@ func main() {
 	}()
 }
 
-func insertingObjects(bucket string, key string, body []byte) error {
+func insertObjects(bucket string, key string, body []byte) error {
 	obj := &riak.Object{
 		ContentType:     "application/json",
 		Key:             key,
@@ -107,7 +104,7 @@ func insertingObjects(bucket string, key string, body []byte) error {
 	return nil
 }
 
-func queryingObjects(bucket string, key string ) (*riak.FetchValueResponse, error) {
+func queryObjects(bucket string, key string ) (*riak.FetchValueResponse, error) {
 	cmd, err := riak.NewFetchValueCommandBuilder().
 		WithBucket(bucket).
 		WithKey(key).
@@ -148,155 +145,14 @@ func updateObjects(bucket string, key string, newval []byte) (*riak.FetchValueRe
 	return rsp, nil
 }
 
-func getRestaurants(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		pincode := r.URL.Query().Get("pincode")
-
-		if pincode != "" {
-			resp, err := queryingObjects("restaurants", pincode)
-			if err != nil {
-				log.Println("[RIAK DEBUG] " + err.Error())
-			}
-
-			w.Write(resp.Values[0].Value)
-		}
+func deleteObjects(bucket string, key string) error{
+	cmd, err := riak.NewDeleteValueCommandBuilder().
+		WithBucket(bucket).
+		WithKey(key).
+		Build()
+	if err != nil {
+		return err
 	}
-}
 
-func getMenu(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		resp, err := queryingObjects("restaurants", "menu")
-		if err != nil {
-			log.Println("[RIAK DEBUG] " + err.Error())
-		}
-
-		w.Write(resp.Values[0].Value)
-	}
-}
-
-func addToCart(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-
-		b, err := ioutil.ReadAll(r.Body)
-		defer r.Body.Close()
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-
-		// Unmarshal
-		var cart Cart
-		err = json.Unmarshal(b, &cart)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-
-		fmt.Printf("%+v\n", cart)
-
-		if cart.Id == "" {
-			http.Error(w, "ID is not sent", 500)
-			return
-		}
-
-		if cart.RestaurantId == 0{
-			http.Error(w, "Restaurant ID is not sent", 500)
-			return
-		}
-
-		if cart.Items == nil{
-			http.Error(w, "Items null", 500)
-			return
-		}
-
-		//TODO: Loop through items and print error by checking id and qty
-
-
-		output, err := json.Marshal(cart)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-
-		if insertingObjects("cart",cart.Id, output) == nil {
-			w.WriteHeader(http.StatusInternalServerError)
-		} else {
-			w.WriteHeader(http.StatusOK)
-		}
-	}
-}
-
-
-func viewCart(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-
-		//unmarshall
-		var cartid string
-		cartid = r.Header.Get("cartid")
-
-		if debug { fmt.Println("cart id is :", cartid) }
-
-		resp, err := queryingObjects("cart", cartid)
-		if err != nil {
-			log.Println("[RIAK DEBUG] " + err.Error())
-		}
-
-		w.Write(resp.Values[0].Value)
-	}
-}
-
-func order(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		uuid, _ := uuid.NewV4()
-		value := "Order Placed"
-
-		reqbody := "{\"Id\": \"" +
-			uuid.String() +
-			"\",\"OrderStatus\": \"" +
-			value +
-			"\"}"
-
-		if insertingObjects("orders", uuid.String(), []byte(reqbody)) == nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(reqbody))
-		} else {
-			w.WriteHeader(http.StatusOK)
-		}
-	} else if r.Method == "PUT" {
-		var orderid string
-		value := "Order Processed"
-		orderid = r.URL.Query().Get("orderid")
-
-		log.Println(orderid)
-
-		if orderid != "" {
-			reqbody := "{\"Id\": \"" +
-				orderid +
-				"\",\"OrderStatus\": \"" +
-				value +
-				"\"}"
-			resp, err := updateObjects("orders", orderid, []byte(reqbody))
-			if err != nil {
-				log.Println("[RIAK DEBUG] " + err.Error())
-			}
-
-			w.Write(resp.Values[0].Value)
-		}
-	} else if r.Method == "GET" {
-		var orderid string
-		orderid = r.URL.Query().Get("orderid")
-
-		log.Println("in get")
-		fmt.Println("in get")
-		log.Println(orderid)
-
-		if orderid != "" {
-			resp, err := queryingObjects("orders", orderid)
-			if err != nil {
-				log.Println("[RIAK DEBUG] " + err.Error())
-			}
-
-			w.Write(resp.Values[0].Value)
-		}
-	}
+	return cluster.Execute(cmd)
 }
