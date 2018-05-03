@@ -12,6 +12,7 @@
 		"856d3b52-b507-47d3-962f-ef2e237914d5",
 		"b55fc879-aa81-40fd-9bae-b95e230e445f",
 		"b37c78bb-c436-4da5-82eb-bee78b673f86",
+		"98168ac3-8e46-4cd9-aa45-38e56723ef61",
 		"76490bfa-a104-4fb5-b9f6-4a43fe07b90e",
 		"b5319e83-8ed7-48d7-850e-fe885afb533a",
 		"6b13bcad-6265-4159-acdb-b387a3bbb967"
@@ -131,7 +132,7 @@
 		{
 			"id": "856d3b52-b507-47d3-962f-ef2e237914d5",
 			"name": "add to cart",
-			"url": "http://localhost:8080/addToCart",
+			"url": "http://localhost:8080/cart",
 			"description": "",
 			"data": [],
 			"dataMode": "raw",
@@ -150,6 +151,30 @@
 			"folder": null,
 			"rawModeData": "{\n    \"id\": \"abcd\",\n    \"restaurantId\": 1,\n    \"items\": [\n        {\n            \"id\": 1,\n            \"quantity\":1\n        },\n        {\n            \"id\": 2,\n            \"quantity\":2\n        }\n    ]\n}",
 			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "98168ac3-8e46-4cd9-aa45-38e56723ef61",
+			"name": "delete cart",
+			"url": "http://localhost:8080/cart",
+			"description": "",
+			"data": null,
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "id",
+					"value": "bobburi.indira",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"method": "DELETE",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": [],
+			"folder": null,
+			"headers": "id: bobburi.indira\n",
 			"pathVariables": {}
 		},
 		{
@@ -201,7 +226,7 @@
 		{
 			"id": "b37c78bb-c436-4da5-82eb-bee78b673f86",
 			"name": "update cart",
-			"url": "http://localhost:8080/addToCart",
+			"url": "http://localhost:8080/cart",
 			"description": "",
 			"data": [],
 			"dataMode": "raw",
