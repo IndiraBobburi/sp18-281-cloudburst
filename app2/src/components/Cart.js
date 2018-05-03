@@ -21,12 +21,11 @@ class Cart extends Component {
             });
     }
     order=()=>{
-        var self = this.state;
-        API.getCart('1234')
+        API.order(this.state.cart)
             .then((res) => {
                 console.log(res);
-                self.cart = res;
-                this.setState(self);
+                alert("Order is placed successfully :)")
+                this.props.history.push("/orders");
             });
     }
 

@@ -22,6 +22,9 @@ class TopMenu extends Component {
     gotoCart = () =>{
         this.props.history.push("/cart");
     }
+    gotoOrders = ()=>{
+        this.props.history.push("/orders");
+    }
   render() {
     return (
         <div className="row">
@@ -50,6 +53,11 @@ class TopMenu extends Component {
                           <span onClick={ () =>{this.gotoCart()}}>CART</span>
                       </div>
                   </div>
+                    <div className="col-md-3">
+                        <div>
+                            <span onClick={ () =>{this.gotoOrders()}}>ORDERS</span>
+                        </div>
+                    </div>
 
                  </div>
             </div>

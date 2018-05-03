@@ -9,6 +9,7 @@ import Signup from './Signup.js';
 import Menu from './Menu.js';
 import RestaurantMenu from './RestaurantMenu.js';
 import Cart from './Cart.js';
+import Orders from './Orders.js';
 
 class MainComponent extends Component {
   render() {
@@ -55,6 +56,12 @@ class MainComponent extends Component {
         (
             <div>
                 <Cart/>
+            </div>
+        )}/>
+    <Route exact path="/orders" render={() =>
+        (
+            <div>
+                <Orders/>
             </div>
         )}/>
 
