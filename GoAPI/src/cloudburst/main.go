@@ -153,13 +153,30 @@ func updateObjects(bucket string, key string, newval []byte) (*riak.FetchValueRe
 
 	fvc := cmd.(*riak.FetchValueCommand)
 	rsp := fvc.Response
+	obj := rsp.Values[0]
 
 	if debug {
-		if rsp.Values != nil {
-			log.Println(string(rsp.Values[0].Value))
+		if obj != nil {
+			log.Println(string(obj.Value))
 		}
 	}
-	rsp.Values[0].Value = newval
+
+	obj.Value = newval
+
+	cmd, err = riak.NewStoreValueCommandBuilder().
+		WithBucket(bucket).
+		WithKey(key).
+		WithContent(obj).
+		Build()
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err = cluster.Execute(cmd); err != nil {
+		return nil, err
+	}
+
 	return rsp, nil
 }
 

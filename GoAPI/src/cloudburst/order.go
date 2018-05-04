@@ -87,8 +87,6 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 	var orderid string
 	orderid = r.URL.Query().Get("orderid")
 
-	if debug { log.Println(orderid) }
-
 	if orderid != "" {
 		resp, err := queryObjects("orders", orderid)
 		if err != nil {
@@ -167,45 +165,47 @@ func getOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func getOrders(w http.ResponseWriter, r *http.Request){
-	var userid string
-	userid = r.URL.Query().Get("userid")
+	if r.Method == "GET" {
+		var userid string
+		userid = r.URL.Query().Get("userid")
 
-	log.Println("debug 1")
+		resp, err := queryObjects("orderlist", userid)
+		if err != nil {
+			log.Println("[RIAK DEBUG] " + err.Error())
+			return
+		}
 
-	resp, err := queryObjects("orderlist", userid)
-	if err != nil {
-		log.Println("[RIAK DEBUG] " + err.Error())
-	}
+		var orderids []string
+		err = json.Unmarshal(resp.Values[0].Value, &orderids)
+		if err != nil {
+			log.Println("getOrders: json unmarshalling error")
+			return
+		}
 
-	var orderids []string
-	err = json.Unmarshal(resp.Values[0].Value, &orderids)
-	if err != nil {
-		log.Println("getOrders: json unmarshalling error")
-	}
+		var orders []Order
+		var order Order
+		for _, orderid := range orderids {
+			if orderid != "" {
+				resp, err := queryObjects("orders", orderid)
+				if err != nil {
+					log.Println("[RIAK DEBUG] " + err.Error())
+				}
 
-	log.Println("debug a", orderids)
-
-	var orders []Order
-	var order Order
-	for _, orderid := range orderids {
-		if orderid != "" {
-			resp, err := queryObjects("orders", orderid)
-			if err != nil {
-				log.Println("[RIAK DEBUG] " + err.Error())
-			}
-
-			err = json.Unmarshal(resp.Values[0].Value, &order)
-			log.Println("debug b", order)
-			if err != nil {
+				err = json.Unmarshal(resp.Values[0].Value, &order)
+				if err != nil {
+					log.Println("getOrders unmarshalling error: " + err.Error())
+					return
+				}
 				orders = append(orders, order)
 			}
 		}
-	}
 
-	log.Println("debug c", orders)
+		output, err := json.Marshal(orders)
+		if err != nil {
+			log.Println("getOrders marshalling error: " + err.Error())
+			return
+		}
 
-	output, err := json.Marshal(orders)
-	if err != nil {
 		w.WriteHeader(http.StatusOK)
 		w.Write(output)
 	}

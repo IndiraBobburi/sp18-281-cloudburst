@@ -5,15 +5,12 @@ import (
 	"net/http"
 	"io/ioutil"
 	"encoding/json"
-	"fmt"
 )
 
 func user(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	log.Println("coming 1")
 
 	if r.Method == "POST" {
-		log.Println("coming 2")
 		createUser(w,r)
 	} else if r.Method == "PUT" {
 		updateUser(w,r)
@@ -124,8 +121,6 @@ func deleteUser(w http.ResponseWriter, r *http.Request){
 	enableCors(&w)
 	var userid string
 	userid = r.Header.Get("id")
-
-	if debug { fmt.Println("user id is :", userid) }
 
 	err := deleteObjects("users", userid)
 	err = deleteObjects("orderlist", userid)

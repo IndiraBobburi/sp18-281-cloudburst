@@ -111,7 +111,7 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 
 	var userid string
 	//userid = r.Header.Get("id")
-      userid = r.URL.Query().Get("id")
+	userid = r.URL.Query().Get("id")
 	if debug { fmt.Println("cart id is :", userid) }
 
 	resp, err := queryObjects("cart", userid)
