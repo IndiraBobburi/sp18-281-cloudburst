@@ -64,12 +64,12 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	if insertObjects("orders", order.Id, output) == nil {
+	if insertObjects("orders", order.Id, output, getCluster(order.UserId)) == nil {
 		//update orderlist
 		updateOrderList(order.UserId, order.Id)
 
 		//delete cart
-		err := deleteObjects("cart", order.UserId)
+		err := deleteObjects("cart", order.UserId, getCluster(order.UserId))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -84,11 +84,12 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 func updateOrder(w http.ResponseWriter, r *http.Request){
 	enableCors(&w)
 
-	var orderid string
+	var userid, orderid string
 	orderid = r.URL.Query().Get("orderid")
+	orderid = r.URL.Query().Get("userid")
 
 	if orderid != "" {
-		resp, err := queryObjects("orders", orderid)
+		resp, err := queryObjects("orders", orderid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -103,7 +104,7 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 			return
 		}
 
-		newrsp, err := updateObjects("orders", orderid, []byte(output))
+		newrsp, err := updateObjects("orders", orderid, []byte(output), getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -114,7 +115,7 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 
 func updateOrderList(userid string, orderid string){
 	if orderid != "" {
-		resp, err := queryObjects("orderlist", userid)
+		resp, err := queryObjects("orderlist", userid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -136,9 +137,9 @@ func updateOrderList(userid string, orderid string){
 		}
 
 		if resp.Values != nil{
-			_, err = updateObjects("orderlist", userid, []byte(output))
+			_, err = updateObjects("orderlist", userid, []byte(output), getCluster(userid))
 		} else {
-			err = insertObjects("orderlist", userid, []byte(output))
+			err = insertObjects("orderlist", userid, []byte(output), getCluster(userid))
 		}
 
 		if err != nil {
@@ -150,11 +151,12 @@ func updateOrderList(userid string, orderid string){
 func getOrder(w http.ResponseWriter, r *http.Request){
 	enableCors(&w)
 
-	var orderid string
+	var userid, orderid string
 	orderid = r.URL.Query().Get("orderid")
+	orderid = r.URL.Query().Get("userid")
 
 	if orderid != "" {
-		resp, err := queryObjects("orders", orderid)
+		resp, err := queryObjects("orders", orderid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -169,7 +171,7 @@ enableCors(&w)
 		var userid string
 		userid = r.URL.Query().Get("userid")
 
-		resp, err := queryObjects("orderlist", userid)
+		resp, err := queryObjects("orderlist", userid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 			return
@@ -186,7 +188,7 @@ enableCors(&w)
 		var order Order
 		for _, orderid := range orderids {
 			if orderid != "" {
-				resp, err := queryObjects("orders", orderid)
+				resp, err := queryObjects("orders", orderid, getCluster(userid))
 				if err != nil {
 					log.Println("[RIAK DEBUG] " + err.Error())
 				}

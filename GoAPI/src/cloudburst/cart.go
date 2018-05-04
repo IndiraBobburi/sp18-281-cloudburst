@@ -56,7 +56,7 @@ func addToCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if insertObjects("cart", cart.Id, output) == nil {
+	if insertObjects("cart", cart.Id, output, getCluster(cart.Id)) == nil {
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -98,7 +98,7 @@ func updateCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, nil := updateObjects("cart", cart.Id, output)
+	resp, nil := updateObjects("cart", cart.Id, output, getCluster(cart.Id))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
 	}
@@ -114,7 +114,7 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 	userid = r.URL.Query().Get("id")
 	if debug { fmt.Println("cart id is :", userid) }
 
-	resp, err := queryObjects("cart", userid)
+	resp, err := queryObjects("cart", userid, getCluster(userid))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
 	}
@@ -130,7 +130,7 @@ func deleteCart(w http.ResponseWriter, r *http.Request) {
 
 	if debug { fmt.Println("cart id is :", cartid) }
 
-	err := deleteObjects("cart", cartid)
+	err := deleteObjects("cart", cartid, getCluster(cartid))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

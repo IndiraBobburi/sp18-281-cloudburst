@@ -29,6 +29,7 @@ type ItemList struct {
 
 type CartItem struct {
 	Id      uint64 `json:"id"` //item id
+	//Name    string `json:name`
 	Quantity uint8 `json:"quantity"`
 }
 

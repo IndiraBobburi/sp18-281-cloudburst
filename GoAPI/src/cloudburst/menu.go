@@ -12,7 +12,7 @@ func getRestaurants(w http.ResponseWriter, r *http.Request) {
 		pincode := r.URL.Query().Get("pincode")
 
 		if pincode != "" {
-			resp, err := queryObjects("restaurants", pincode)
+			resp, err := queryObjects("restaurants", pincode, cluster1)
 			if err != nil {
 				log.Println("[RIAK DEBUG] " + err.Error())
 			}
@@ -25,7 +25,7 @@ func getRestaurants(w http.ResponseWriter, r *http.Request) {
 func getMenu(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	if r.Method == "GET" {
-		resp, err := queryObjects("restaurants", "menu")
+		resp, err := queryObjects("restaurants", "menu", cluster1)
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}

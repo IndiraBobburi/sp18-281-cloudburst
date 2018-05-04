@@ -5,23 +5,28 @@ import (
 	"fmt"
 	"log"
 	"github.com/basho/riak-go-client"
+	"os"
 )
 
 var debug = true
 
 //connect to tcp ports for cluster
-var s1 = "54.183.106.118:8087"   //"localhost:8002"
-var s2 = "13.57.3.195:8087"      //"localhost:8003"
-var s3 = "54.153.107.186:8087"   //"localhost:8004"
+var s1 = os.Getenv("RIAK1_N1")
+var s2 = os.Getenv("RIAK1_N2")
+var s3 = os.Getenv("RIAK1_N3")
+var s4 = os.Getenv("RIAK1_N4")
+var s5 = os.Getenv("RIAK1_N5")
 
-var cluster *riak.Cluster
+var t1 = os.Getenv("RIAK2_N1")
+var t2 = os.Getenv("RIAK2_N2")
+var t3 = os.Getenv("RIAK2_N3")
+var t4 = os.Getenv("RIAK2_N4")
+var t5 = os.Getenv("RIAK2_N5")
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-	fmt.Fprintf(w, "Hi there! Welcome to goBurger")
-}
+var cluster1 *riak.Cluster
+var cluster2 *riak.Cluster
 
-func init(){
+func initCluster1(){
 	nodeOpts1 := &riak.NodeOptions{
 		RemoteAddress: s1,
 	}
@@ -34,9 +39,15 @@ func init(){
 		RemoteAddress: s3,
 	}
 
-	var node1 *riak.Node
-	var node2 *riak.Node
-	var node3 *riak.Node
+	nodeOpts4 := &riak.NodeOptions{
+		RemoteAddress: s4,
+	}
+
+	nodeOpts5 := &riak.NodeOptions{
+		RemoteAddress: s5,
+	}
+
+	var node1, node2, node3, node4, node5 *riak.Node
 	var err error
 
 	if node1, err = riak.NewNode(nodeOpts1); err != nil {
@@ -51,21 +62,100 @@ func init(){
 		fmt.Println(err.Error())
 	}
 
-	nodes := []*riak.Node{node1, node2, node3}
+	if node4, err = riak.NewNode(nodeOpts4); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node5, err = riak.NewNode(nodeOpts5); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	nodes := []*riak.Node{node1, node2, node3, node4, node5}
 	opts := &riak.ClusterOptions{
 		Nodes: nodes,
 	}
 
 	log.Println( nodes )
 
-	cluster, err = riak.NewCluster(opts)
+	cluster1, err = riak.NewCluster(opts)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	if err := cluster.Start(); err != nil {
+	if err := cluster1.Start(); err != nil {
 		fmt.Println(err.Error())
 	}
+}
+
+func initCluster2(){
+	nodeOpts1 := &riak.NodeOptions{
+		RemoteAddress: t1,
+	}
+
+	nodeOpts2 := &riak.NodeOptions{
+		RemoteAddress: t2,
+	}
+
+	nodeOpts3 := &riak.NodeOptions{
+		RemoteAddress: t3,
+	}
+
+	nodeOpts4 := &riak.NodeOptions{
+		RemoteAddress: t4,
+	}
+
+	nodeOpts5 := &riak.NodeOptions{
+		RemoteAddress: t5,
+	}
+
+	var node1, node2, node3, node4, node5 *riak.Node
+	var err error
+
+	if node1, err = riak.NewNode(nodeOpts1); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node2, err = riak.NewNode(nodeOpts2); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node3, err = riak.NewNode(nodeOpts3); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node4, err = riak.NewNode(nodeOpts4); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node5, err = riak.NewNode(nodeOpts5); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	nodes := []*riak.Node{node1, node2, node3, node4, node5}
+	opts := &riak.ClusterOptions{
+		Nodes: nodes,
+	}
+
+	log.Println( nodes )
+
+	cluster2, err = riak.NewCluster(opts)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if err := cluster2.Start(); err != nil {
+		fmt.Println(err.Error())
+	}
+}
+
+func init() {
+	initCluster1()
+	initCluster2()
+}
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	fmt.Fprintf(w, "Hi there! Welcome to goBurger")
 }
 
 func main() {
@@ -80,7 +170,13 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 
 	defer func() {
-		if err := cluster.Stop(); err != nil {
+		if err := cluster1.Stop(); err != nil {
+			log.Println(err.Error())
+		}
+	}()
+
+	defer func() {
+		if err := cluster2.Stop(); err != nil {
 			log.Println(err.Error())
 		}
 	}()
@@ -91,7 +187,7 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
-func insertObjects(bucket string, key string, body []byte) error {
+func insertObjects(bucket string, key string, body []byte, cluster *riak.Cluster) error {
 	obj := &riak.Object{
 		ContentType:     "application/json",
 		Key:             key,
@@ -113,7 +209,7 @@ func insertObjects(bucket string, key string, body []byte) error {
 	return nil
 }
 
-func queryObjects(bucket string, key string ) (*riak.FetchValueResponse, error) {
+func queryObjects(bucket string, key string, cluster *riak.Cluster ) (*riak.FetchValueResponse, error) {
 	cmd, err := riak.NewFetchValueCommandBuilder().
 		WithBucket(bucket).
 		WithKey(key).
@@ -138,7 +234,7 @@ func queryObjects(bucket string, key string ) (*riak.FetchValueResponse, error) 
 	return rsp, nil
 }
 
-func updateObjects(bucket string, key string, newval []byte) (*riak.FetchValueResponse, error) {
+func updateObjects(bucket string, key string, newval []byte, cluster *riak.Cluster) (*riak.FetchValueResponse, error) {
 	cmd, err := riak.NewFetchValueCommandBuilder().
 		WithBucket(bucket).
 		WithKey(key).
@@ -180,7 +276,7 @@ func updateObjects(bucket string, key string, newval []byte) (*riak.FetchValueRe
 	return rsp, nil
 }
 
-func deleteObjects(bucket string, key string) error{
+func deleteObjects(bucket string, key string, cluster *riak.Cluster) error{
 	cmd, err := riak.NewDeleteValueCommandBuilder().
 		WithBucket(bucket).
 		WithKey(key).
@@ -191,124 +287,13 @@ func deleteObjects(bucket string, key string) error{
 
 	return cluster.Execute(cmd)
 }
-/*
 
-var t1 = "13.57.157.185"
-var t2 = "54.177.138.102"
-var t3 = "50.18.101.34"
-var t4 = "52.8.171.177"
-var t5 = "52.9.207.132"
 
-var cluster1 *riak.Cluster
-var cluster2 *riak.Cluster
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
-	fmt.Fprintf(w, "Hi there! Welcome to goBurger")
+//shard the database based on userid
+func getCluster(userid string) *riak.Cluster {
+	if len(userid)%2 == 0 {
+		return cluster1
+	} else {
+		return cluster2
+	}
 }
-
-func init(){
-	nodeOpts1 := &riak.NodeOptions{
-		RemoteAddress: s1,
-	}
-	nodeOpts2 := &riak.NodeOptions{
-		RemoteAddress: s2,
-	}
-	nodeOpts3 := &riak.NodeOptions{
-		RemoteAddress: s3,
-	}
-
-	nodeOpts4 := &riak.NodeOptions{
-    	RemoteAddress: t1,
-    }
-    nodeOpts5 := &riak.NodeOptions{
-    	RemoteAddress: t2,
-    }
-    nodeOpts6 := &riak.NodeOptions{
-    	RemoteAddress: t3,
-    }
-    nodeOpts7 := &riak.NodeOptions{
-       	RemoteAddress: t4,
-    }
-    nodeOpts8 := &riak.NodeOptions{
-        RemoteAddress: t5,
-    }
-
-	var node1 *riak.Node
-	var node2 *riak.Node
-	var node3 *riak.Node
-
-	var node4 *riak.Node
-    var node5 *riak.Node
-    var node6 *riak.Node
-    var node7 *riak.Node
-    var node8 *riak.Node
-
-	var err error
-
-	if node1, err = riak.NewNode(nodeOpts1); err != nil {
-		fmt.Println(err.Error())
-	}
-
-	if node2, err = riak.NewNode(nodeOpts2); err != nil {
-		fmt.Println(err.Error())
-	}
-
-	if node3, err = riak.NewNode(nodeOpts3); err != nil {
-		fmt.Println(err.Error())
-	}
-
-	    if node4, err = riak.NewNode(nodeOpts4); err != nil {
-    		fmt.Println(err.Error())
-    	}
-
-    	if node5, err = riak.NewNode(nodeOpts5); err != nil {
-    		fmt.Println(err.Error())
-    	}
-
-    	if node6, err = riak.NewNode(nodeOpts6); err != nil {
-    		fmt.Println(err.Error())
-    	}
-       if node7, err = riak.NewNode(nodeOpts7); err != nil {
-            fmt.Println(err.Error())
-        }
-
-        if node8, err = riak.NewNode(nodeOpts8); err != nil {
-            fmt.Println(err.Error())
-        }
-
-
-	nodes1 := []*riak.Node{node1, node2, node3}
-	opts1 := &riak.ClusterOptions{
-		Nodes: nodes1,
-	}
-
-	nodes2 := []*riak.Node{node4, node5, node6, node7, node8}
-    opts2 := &riak.ClusterOptions{
-    		Nodes: nodes2,
-    }
-
-	log.Println( nodes1 )
-    log.Println( nodes2 )
-
-	cluster1, err = riak.NewCluster(opts1)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	cluster2, err = riak.NewCluster(opts2)
-    	if err != nil {
-    		fmt.Println(err.Error())
-    	}
-
-	if err := cluster1.Start(); err != nil {
-		fmt.Println(err.Error())
-	}
-
-	if err := cluster2.Start(); err != nil {
-    		fmt.Println(err.Error())
-    	}
-}*/
-// length := len(value)
-//var c int
-//c = a % b

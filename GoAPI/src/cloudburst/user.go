@@ -56,7 +56,7 @@ func createUser(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	if insertObjects("users", user.Id, output) == nil {
+	if insertObjects("users", user.Id, output, getCluster(user.Id)) == nil {
 		w.WriteHeader(http.StatusOK)
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -80,7 +80,7 @@ func updateUser(w http.ResponseWriter, r *http.Request){
 	}
 
 	if user.Id != "" {
-		_, err := queryObjects("users", user.Id)
+		_, err := queryObjects("users", user.Id, getCluster(user.Id))
 		if err != nil {
 			log.Println(user.Id + "not present in RIAK")
 			log.Println(err.Error())
@@ -93,7 +93,7 @@ func updateUser(w http.ResponseWriter, r *http.Request){
 			return
 		}
 
-		newrsp, err := updateObjects("users", user.Id, []byte(output))
+		newrsp, err := updateObjects("users", user.Id, []byte(output), getCluster(user.Id))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -108,7 +108,7 @@ func getUser(w http.ResponseWriter, r *http.Request){
 	userid = r.URL.Query().Get("id")
 
 	if userid != "" {
-		resp, err := queryObjects("users", userid)
+		resp, err := queryObjects("users", userid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -122,8 +122,8 @@ func deleteUser(w http.ResponseWriter, r *http.Request){
 	var userid string
 	userid = r.Header.Get("id")
 
-	err := deleteObjects("users", userid)
-	err = deleteObjects("orderlist", userid)
+	err := deleteObjects("users", userid, getCluster(userid))
+	err = deleteObjects("orderlist", userid, getCluster(userid))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
