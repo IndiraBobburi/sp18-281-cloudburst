@@ -33,14 +33,16 @@ type CartItem struct {
 }
 
 type Cart struct{
-	Id           string `json:"id"`
-	RestaurantId uint64 `json:"restaurantId"`
-	Items    []CartItem `json:"items"`
+	Id             string `json:"id"`
+	RestaurantId   uint64 `json:"restaurantId"`
+	RestaurantName string `json:"restaurantName"`
+	Items      []CartItem `json:"items"`
 }
 
 type Order struct {
 	UserId       string `json:"userid"`
 	RestaurantId uint64 `json:"restaurantId"`
+	RestaurantName string `json:"restaurantName"`
 	Items    []CartItem `json:"items"`
 	Id           string `json:"id"`   //will be same as cart id and cart gets deleted.
 	OrderStatus  string `json:"status"`
