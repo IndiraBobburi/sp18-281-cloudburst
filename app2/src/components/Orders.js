@@ -29,13 +29,13 @@ class Orders extends Component {
               items = temp.items;
               var itemList = [];
               items.map(function (tempItem, index) {
-                  ordersList.push(
+                  itemList.push(
                           <div className="col-md-8 div-res">
                               <div>
-                                  Name: {tempItem.id}
+                                  {tempItem.id}
                               </div>
                               <div>
-                                  Price: {tempItem.quantity}
+                                  Qty: {tempItem.quantity}
                               </div>
                           </div>
                   );
@@ -46,10 +46,10 @@ class Orders extends Component {
                   <div className="row border-1-black margin-top-20">
                       <div className="col-md-8 div-res">
                           <div>
-                              Name: {temp.restaurantId}
+                              Restaurant: {temp.restaurantName}
                           </div>
                           <div>
-                              Items : {ordersList}
+                              {itemList}
                           </div>
                       </div>
                       <div className="col-md-4">
@@ -61,7 +61,15 @@ class Orders extends Component {
       }
     return (  
         <div className="row">
+            <div className="col-md-2">
+            </div>
+            <div className="col-md-8">
+                <div className="login-block">
             {ordersList}
+                </div>
+            </div>
+            <div className="col-md-2">
+            </div>
         </div>
     );
   }

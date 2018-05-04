@@ -28,7 +28,9 @@ componentWillMount(){
 
 
 }
+
     addToCart = (Itemid)=>{
+
         var cart = this.state.cart;
         var new_cart=null;
         var resId = parseInt(localStorage.getItem("ResId"));
@@ -62,7 +64,6 @@ for(var i = 0;i<items.length;i++){
 
             }
         }
-       // localStorage.setItem("cart",cart);
         API.addToCart(cart)
             .then((res) => {
                 console.log(res);
@@ -71,6 +72,15 @@ for(var i = 0;i<items.length;i++){
                 this.setState(self);
             });
 
+    }
+    addToCartCheck = (Itemid)=>{
+        if(localStorage.getItem("userId") === null){
+            alert("Please login before purchase!")
+
+        }
+        else{
+            this.addToCart(Itemid);
+        }
     }
   render() {
       var ResMenu = [];
@@ -91,7 +101,7 @@ for(var i = 0;i<items.length;i++){
                       </div>
                   </div>
                   <div className="col-md-4">
-                      <button onClick={ () =>{this.addToCart(temp.id)}}  className="login-button" id="btnLogin" type="button">BUY</button>
+                      <button onClick={ () =>{this.addToCartCheck(temp.id)}}  className="login-button" id="btnLogin" type="button">BUY</button>
                   </div>
               </div>
           );
