@@ -191,3 +191,124 @@ func deleteObjects(bucket string, key string) error{
 
 	return cluster.Execute(cmd)
 }
+/*
+
+var t1 = "13.57.157.185"
+var t2 = "54.177.138.102"
+var t3 = "50.18.101.34"
+var t4 = "52.8.171.177"
+var t5 = "52.9.207.132"
+
+var cluster1 *riak.Cluster
+var cluster2 *riak.Cluster
+
+func handler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	fmt.Fprintf(w, "Hi there! Welcome to goBurger")
+}
+
+func init(){
+	nodeOpts1 := &riak.NodeOptions{
+		RemoteAddress: s1,
+	}
+	nodeOpts2 := &riak.NodeOptions{
+		RemoteAddress: s2,
+	}
+	nodeOpts3 := &riak.NodeOptions{
+		RemoteAddress: s3,
+	}
+
+	nodeOpts4 := &riak.NodeOptions{
+    	RemoteAddress: t1,
+    }
+    nodeOpts5 := &riak.NodeOptions{
+    	RemoteAddress: t2,
+    }
+    nodeOpts6 := &riak.NodeOptions{
+    	RemoteAddress: t3,
+    }
+    nodeOpts7 := &riak.NodeOptions{
+       	RemoteAddress: t4,
+    }
+    nodeOpts8 := &riak.NodeOptions{
+        RemoteAddress: t5,
+    }
+
+	var node1 *riak.Node
+	var node2 *riak.Node
+	var node3 *riak.Node
+
+	var node4 *riak.Node
+    var node5 *riak.Node
+    var node6 *riak.Node
+    var node7 *riak.Node
+    var node8 *riak.Node
+
+	var err error
+
+	if node1, err = riak.NewNode(nodeOpts1); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node2, err = riak.NewNode(nodeOpts2); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if node3, err = riak.NewNode(nodeOpts3); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	    if node4, err = riak.NewNode(nodeOpts4); err != nil {
+    		fmt.Println(err.Error())
+    	}
+
+    	if node5, err = riak.NewNode(nodeOpts5); err != nil {
+    		fmt.Println(err.Error())
+    	}
+
+    	if node6, err = riak.NewNode(nodeOpts6); err != nil {
+    		fmt.Println(err.Error())
+    	}
+       if node7, err = riak.NewNode(nodeOpts7); err != nil {
+            fmt.Println(err.Error())
+        }
+
+        if node8, err = riak.NewNode(nodeOpts8); err != nil {
+            fmt.Println(err.Error())
+        }
+
+
+	nodes1 := []*riak.Node{node1, node2, node3}
+	opts1 := &riak.ClusterOptions{
+		Nodes: nodes1,
+	}
+
+	nodes2 := []*riak.Node{node4, node5, node6, node7, node8}
+    opts2 := &riak.ClusterOptions{
+    		Nodes: nodes2,
+    }
+
+	log.Println( nodes1 )
+    log.Println( nodes2 )
+
+	cluster1, err = riak.NewCluster(opts1)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	cluster2, err = riak.NewCluster(opts2)
+    	if err != nil {
+    		fmt.Println(err.Error())
+    	}
+
+	if err := cluster1.Start(); err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if err := cluster2.Start(); err != nil {
+    		fmt.Println(err.Error())
+    	}
+}*/
+// length := len(value)
+//var c int
+//c = a % b
