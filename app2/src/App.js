@@ -5,7 +5,11 @@ import {BrowserRouter } from 'react-router-dom';
 import MainComponent from './components/MainComponent';
 
 class App extends Component {
+    componentWillMount(){
+        localStorage.clear();
+    }
   render() {
+
     return (
       <div className="App">
           <BrowserRouter>
