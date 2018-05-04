@@ -11,7 +11,7 @@ export const signin = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include',
+       
         body: JSON.stringify(payload)
     }).then(res => {
         return res.json();
@@ -28,7 +28,7 @@ export const signup = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include',
+       
         body: JSON.stringify(payload)
     }).then(res => {
         return res.json();
@@ -45,7 +45,7 @@ export const getRestaurants = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+       
     }).then(res => {
         return res.json();
     })
@@ -61,7 +61,7 @@ export const getMenu = () =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+       
     }).then(res => {
         return res.json();
     })
@@ -77,7 +77,7 @@ export const addToCart = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include',
+       
         body: JSON.stringify(payload)
     }).then(res => {
         //localStorage.setItem("cart",JSON.stringify(payload));
@@ -96,7 +96,7 @@ export const getCart = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+       
     }).then(res => {
         return res.json();
     })
@@ -113,7 +113,7 @@ export const order = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include',
+       
         body: JSON.stringify(payload)
     }).then(res => {
         //localStorage.setItem("cart",JSON.stringify(payload));
@@ -132,7 +132,7 @@ export const getAllOrders = (payload) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        credentials:'include'
+       
     }).then(res => {
         return res.json();
     })
