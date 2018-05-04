@@ -17,6 +17,7 @@ var s3 = "54.153.107.186:8087"   //"localhost:8004"
 var cluster *riak.Cluster
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	fmt.Fprintf(w, "Hi there! Welcome to goBurger")
 }
 
@@ -74,12 +75,20 @@ func main() {
 	http.HandleFunc("/cart", cart)
 	http.HandleFunc("/order", order)
 	http.HandleFunc("/orders", getOrders)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/user", user)
+
+	http.ListenAndServe(":8080", nil)
+
 	defer func() {
 		if err := cluster.Stop(); err != nil {
 			log.Println(err.Error())
 		}
 	}()
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
 
 func insertObjects(bucket string, key string, body []byte) error {

@@ -6,6 +6,8 @@ import (
 )
 
 func getRestaurants(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	if r.Method == "GET" {
 		pincode := r.URL.Query().Get("pincode")
 
@@ -21,6 +23,7 @@ func getRestaurants(w http.ResponseWriter, r *http.Request) {
 }
 
 func getMenu(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	if r.Method == "GET" {
 		resp, err := queryObjects("restaurants", "menu")
 		if err != nil {

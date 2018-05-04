@@ -10,6 +10,8 @@ import (
 )
 
 func order(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+
 	if r.Method == "POST" {
 		createOrder(w,r)
 	} else if r.Method == "PUT" {
@@ -20,6 +22,8 @@ func order(w http.ResponseWriter, r *http.Request) {
 }
 
 func createOrder(w http.ResponseWriter, r *http.Request){
+	enableCors(&w)
+
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -75,6 +79,8 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func updateOrder(w http.ResponseWriter, r *http.Request){
+	enableCors(&w)
+
 	var orderid string
 	orderid = r.URL.Query().Get("orderid")
 
@@ -106,6 +112,8 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func getOrder(w http.ResponseWriter, r *http.Request){
+	enableCors(&w)
+
 	var orderid string
 	orderid = r.URL.Query().Get("orderid")
 
