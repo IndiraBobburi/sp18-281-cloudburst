@@ -124,7 +124,7 @@ export const order = (payload) =>
             return error;
         });
 export const getAllOrders = (payload) =>
-    fetch(`${api_server}/orders`, {
+    fetch(`${api_server}/orders?userid=`+payload, {
         method: 'GET',
         headers: {
             ...headers,
@@ -136,5 +136,5 @@ export const getAllOrders = (payload) =>
     })
         .catch(error => {
             console.log("This is error");
-            return error;
+           return error;
         });
