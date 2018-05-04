@@ -164,7 +164,7 @@ func getOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func getOrders(w http.ResponseWriter, r *http.Request){
-
+enableCors(&w)
 	if r.Method == "GET" {
 		var userid string
 		userid = r.URL.Query().Get("userid")
