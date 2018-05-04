@@ -9,7 +9,7 @@ import (
 )
 
 func cart(w http.ResponseWriter, r *http.Request) {
-	//enableCors(&w)
+	enableCors(&w)
 	if r.Method == "POST" {
 		addToCart(w, r)
 	} else if r.Method == "PUT" {
@@ -22,7 +22,7 @@ func cart(w http.ResponseWriter, r *http.Request) {
 }
 
 func addToCart(w http.ResponseWriter, r *http.Request) {
-	//enableCors(&w)
+	enableCors(&w)
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -64,7 +64,7 @@ func addToCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateCart(w http.ResponseWriter, r *http.Request) {
-	//enableCors(&w)
+	enableCors(&w)
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
@@ -107,7 +107,7 @@ func updateCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func viewCart(w http.ResponseWriter, r *http.Request) {
-	//enableCors(&w)
+	enableCors(&w)
 	//unmarshall
 	var userid string
 	userid = r.Header.Get("id")
@@ -123,7 +123,7 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteCart(w http.ResponseWriter, r *http.Request) {
-	//enableCors(&w)
+	enableCors(&w)
 	//unmarshall
 	var cartid string
 	cartid = r.Header.Get("id")
