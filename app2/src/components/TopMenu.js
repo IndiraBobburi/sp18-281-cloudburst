@@ -44,7 +44,7 @@ class TopMenu extends Component {
                     </div>
                     <div className="col-md-6 menu-heading">
                         <div className="row">
-                            <span>Welcome {this.state.userid}</span>
+                            <span>Welcome {localStorage.getItem("userId") }</span>
                         </div>
                         <div className="row">
                             <div className="col-md-2">
@@ -57,7 +57,7 @@ class TopMenu extends Component {
                                     <span onClick={ () =>{this.gotoMenu()}}>MENU</span>
                                 </div>
                             </div>
-                            
+
                             <div className="col-md-2">
                                 <div>
                                     <span onClick={ () =>{this.gotoCart()}}>CART</span>
