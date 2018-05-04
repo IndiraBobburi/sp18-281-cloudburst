@@ -10,7 +10,10 @@ import (
 
 func user(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
+	log.Println("coming 1")
+
 	if r.Method == "POST" {
+		log.Println("coming 2")
 		createUser(w,r)
 	} else if r.Method == "PUT" {
 		updateUser(w,r)
@@ -37,6 +40,8 @@ func createUser(w http.ResponseWriter, r *http.Request){
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	log.Println(user)
 
 	if user.Id == "" {
 		http.Error(w, "User ID is not sent", 500)

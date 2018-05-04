@@ -65,7 +65,6 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 	}
 
 	if insertObjects("orders", order.Id, output) == nil {
-
 		//update orderlist
 		updateOrderList(order.UserId, order.Id)
 
@@ -124,9 +123,12 @@ func updateOrderList(userid string, orderid string){
 		}
 
 		var orders []string
-		err = json.Unmarshal(resp.Values[0].Value, &orders)
-		if err != nil {
-			log.Println("updateOrderList: json unmarshalling error")
+
+		if resp.Values != nil {
+			err = json.Unmarshal(resp.Values[0].Value, &orders)
+			if err != nil {
+				log.Println("updateOrderList: json unmarshalling error")
+			}
 		}
 
 		orders = append(orders, orderid)
@@ -136,7 +138,12 @@ func updateOrderList(userid string, orderid string){
 			log.Println("updateorderlist: json marshal error"+ err.Error())
 		}
 
-		_, err = updateObjects("orderlist", userid, []byte(output))
+		if resp.Values != nil{
+			_, err = updateObjects("orderlist", userid, []byte(output))
+		} else {
+			err = insertObjects("orderlist", userid, []byte(output))
+		}
+
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -163,6 +170,8 @@ func getOrders(w http.ResponseWriter, r *http.Request){
 	var userid string
 	userid = r.URL.Query().Get("userid")
 
+	log.Println("debug 1")
+
 	resp, err := queryObjects("orderlist", userid)
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
@@ -174,6 +183,8 @@ func getOrders(w http.ResponseWriter, r *http.Request){
 		log.Println("getOrders: json unmarshalling error")
 	}
 
+	log.Println("debug a", orderids)
+
 	var orders []Order
 	var order Order
 	for _, orderid := range orderids {
@@ -183,12 +194,15 @@ func getOrders(w http.ResponseWriter, r *http.Request){
 				log.Println("[RIAK DEBUG] " + err.Error())
 			}
 
-			err = json.Unmarshal(resp.Values[0].Value, order)
+			err = json.Unmarshal(resp.Values[0].Value, &order)
+			log.Println("debug b", order)
 			if err != nil {
 				orders = append(orders, order)
 			}
 		}
 	}
+
+	log.Println("debug c", orders)
 
 	output, err := json.Marshal(orders)
 	if err != nil {

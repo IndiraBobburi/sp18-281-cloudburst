@@ -129,7 +129,12 @@ func queryObjects(bucket string, key string ) (*riak.FetchValueResponse, error) 
 	fvc := cmd.(*riak.FetchValueCommand)
 	rsp := fvc.Response
 
-	log.Println(string(rsp.Values[0].Value))
+	if debug {
+		if rsp.Values != nil {
+			log.Println(string(rsp.Values[0].Value))
+		}
+	}
+
 	return rsp, nil
 }
 
@@ -149,7 +154,11 @@ func updateObjects(bucket string, key string, newval []byte) (*riak.FetchValueRe
 	fvc := cmd.(*riak.FetchValueCommand)
 	rsp := fvc.Response
 
-	if debug { log.Println(string(rsp.Values[0].Value)) }
+	if debug {
+		if rsp.Values != nil {
+			log.Println(string(rsp.Values[0].Value))
+		}
+	}
 	rsp.Values[0].Value = newval
 	return rsp, nil
 }
