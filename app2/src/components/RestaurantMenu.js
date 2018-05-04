@@ -16,7 +16,8 @@ componentWillMount(){
                .then((res) => {
                    console.log(res);
                    self.menuItems = res.menu;
-                   API.getCart('1234')
+                   var userId = localStorage.getItem("userId");
+                   API.getCart(userId)
                        .then((res) => {
                            console.log(res);
                            self.cart = res;
@@ -30,7 +31,7 @@ componentWillMount(){
     addToCart = (Itemid)=>{
         var cart = this.state.cart;
         var new_cart=null;
-        var resId = localStorage.getItem("ResId");
+        var resId = parseInt(localStorage.getItem("ResId"));
         var self = this.state;
         if(resId == cart.restaurantId){
 var items = cart.items;
@@ -50,7 +51,7 @@ for(var i = 0;i<items.length;i++){
 
         else{
             cart = {
-                "id": "abcd",
+                "id": localStorage.getItem("userId"),
                 "restaurantId": resId,
                 "items": [
                     {

@@ -12,10 +12,13 @@ class Cart extends Component {
     }
     componentWillMount() {
         var self = this.state;
-
-        API.getCart('1234')
+        var userId = localStorage.getItem("userId");
+        API.getCart(userId)
             .then((res) => {
                 console.log(res);
+                var cart = res
+                cart.userid = localStorage.getItem("userId");
+                delete cart.id;
                 self.cart = res;
                 this.setState(self);
             });

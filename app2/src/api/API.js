@@ -5,14 +5,12 @@ const headers = {
 };
 
 export const signin = (payload) =>
-    fetch(`${api_server}/signin`, {
-        method: 'POST',
+    fetch(`${api_server}/user?id=`+payload, {
+        method: 'GET',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
-        },
-       
-        body: JSON.stringify(payload)
+        }
     }).then(res => {
         return res.json();
     })
@@ -22,7 +20,7 @@ export const signin = (payload) =>
         });
 
 export const signup = (payload) =>
-    fetch(`${api_server}/signup`, {
+    fetch(`${api_server}/user`, {
         method: 'POST',
         headers: {
             ...headers,
@@ -71,7 +69,7 @@ export const getMenu = () =>
         });
 
 export const addToCart = (payload) =>
-    fetch(`${api_server}/addToCart`, {
+    fetch(`${api_server}/cart`, {
         method: 'POST',
         headers: {
             ...headers,
@@ -90,7 +88,7 @@ export const addToCart = (payload) =>
 
 
 export const getCart = (payload) =>
-    fetch(`${api_server}/viewCart?userId=`+payload, {
+    fetch(`${api_server}/cart?id=`+payload, {
         method: 'GET',
         headers: {
             ...headers,
