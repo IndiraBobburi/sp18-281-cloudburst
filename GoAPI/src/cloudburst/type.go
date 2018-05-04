@@ -48,7 +48,10 @@ type Order struct {
 
 type User struct {
 	Id       string `json:"id"`
-	Password string `json:"id"`
+	Password string `json:"password"`
+	FirstName string `json:"firstname"`
+	LastName string `json:"lastname"`
+
 }
 
 type OrderList struct {
