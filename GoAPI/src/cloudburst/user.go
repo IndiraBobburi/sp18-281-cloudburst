@@ -102,11 +102,11 @@ func updateUser(w http.ResponseWriter, r *http.Request){
 
 func getUser(w http.ResponseWriter, r *http.Request){
 	enableCors(&w)
-	var orderid string
-	orderid = r.URL.Query().Get("orderid")
+	var userid string
+	userid = r.URL.Query().Get("id")
 
-	if orderid != "" {
-		resp, err := queryObjects("orders", orderid)
+	if userid != "" {
+		resp, err := queryObjects("users", userid)
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}
@@ -122,7 +122,8 @@ func deleteUser(w http.ResponseWriter, r *http.Request){
 
 	if debug { fmt.Println("user id is :", userid) }
 
-	err := deleteObjects("cart", userid)
+	err := deleteObjects("users", userid)
+	err = deleteObjects("orderlist", userid)
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)

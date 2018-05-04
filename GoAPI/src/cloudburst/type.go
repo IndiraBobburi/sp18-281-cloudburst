@@ -50,3 +50,7 @@ type User struct {
 	Id       string `json:"id"`
 	Password string `json:"id"`
 }
+
+type OrderList struct {
+	Orders      []string `json:"orderlist"`
+}

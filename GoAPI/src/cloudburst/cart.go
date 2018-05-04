@@ -108,7 +108,7 @@ func updateCart(w http.ResponseWriter, r *http.Request) {
 
 func viewCart(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	//unmarshall
+
 	var userid string
 	userid = r.Header.Get("id")
 
@@ -124,7 +124,7 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 
 func deleteCart(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	//unmarshall
+
 	var cartid string
 	cartid = r.Header.Get("id")
 

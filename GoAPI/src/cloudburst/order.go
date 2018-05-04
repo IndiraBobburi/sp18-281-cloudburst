@@ -65,6 +65,10 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 	}
 
 	if insertObjects("orders", order.Id, output) == nil {
+
+		//update orderlist
+		updateOrderList(order.UserId, order.Id)
+
 		//delete cart
 		err := deleteObjects("cart", order.UserId)
 		if err != nil {
@@ -111,6 +115,34 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 	}
 }
 
+func updateOrderList(userid string, orderid string){
+
+	if orderid != "" {
+		resp, err := queryObjects("orderlist", userid)
+		if err != nil {
+			log.Println("[RIAK DEBUG] " + err.Error())
+		}
+
+		var orders []string
+		err = json.Unmarshal(resp.Values[0].Value, &orders)
+		if err != nil {
+			log.Println("updateOrderList: json unmarshalling error")
+		}
+
+		orders = append(orders, orderid)
+
+		output, err := json.Marshal(orders)
+		if err != nil {
+			log.Println("updateorderlist: json marshal error"+ err.Error())
+		}
+
+		_, err = updateObjects("orderlist", userid, []byte(output))
+		if err != nil {
+			log.Println("[RIAK DEBUG] " + err.Error())
+		}
+	}
+}
+
 func getOrder(w http.ResponseWriter, r *http.Request){
 	enableCors(&w)
 
@@ -128,5 +160,39 @@ func getOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func getOrders(w http.ResponseWriter, r *http.Request){
+	var userid string
+	userid = r.URL.Query().Get("userid")
 
+	resp, err := queryObjects("orderlist", userid)
+	if err != nil {
+		log.Println("[RIAK DEBUG] " + err.Error())
+	}
+
+	var orderids []string
+	err = json.Unmarshal(resp.Values[0].Value, &orderids)
+	if err != nil {
+		log.Println("getOrders: json unmarshalling error")
+	}
+
+	var orders []Order
+	var order Order
+	for _, orderid := range orderids {
+		if orderid != "" {
+			resp, err := queryObjects("orders", orderid)
+			if err != nil {
+				log.Println("[RIAK DEBUG] " + err.Error())
+			}
+
+			err = json.Unmarshal(resp.Values[0].Value, order)
+			if err != nil {
+				orders = append(orders, order)
+			}
+		}
+	}
+
+	output, err := json.Marshal(orders)
+	if err != nil {
+		w.WriteHeader(http.StatusOK)
+		w.Write(output)
+	}
 }
