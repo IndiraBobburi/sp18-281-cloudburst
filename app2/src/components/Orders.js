@@ -30,7 +30,7 @@ class Orders extends Component {
               var itemList = [];
               items.map(function (tempItem, index) {
                   itemList.push(
-                          <div className="col-md-8 div-res">
+                          <div className="col-md-8">
                               <div>
                                   {tempItem.id}
                               </div>
