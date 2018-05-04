@@ -67,6 +67,7 @@ for(var i = 0;i<items.length;i++){
             .then((res) => {
                 console.log(res);
                 self.cart = cart;
+                alert("Added to Cart")
                 this.setState(self);
             });
 
