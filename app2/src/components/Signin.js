@@ -13,10 +13,17 @@ class Signin extends Component {
     signIn  = () => {
         console.log("in signin - 281")
         var data = this.state;
-        API.signin(data)
+        API.signin(data.email)
             .then((res) => {
                 console.log(res);
-                this.props.history.push("/");
+                if(data.password != res.password){
+                    alert("Incorrect username and password. Try again!")
+                }
+                else{
+                    localStorage.setItem("userId", res.id)
+                    localStorage.setItem("username",res.firstname)
+                    this.props.history.push("/");
+                }
             });
     }
     gotoSignup = () =>{
