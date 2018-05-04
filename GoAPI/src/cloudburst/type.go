@@ -51,11 +51,8 @@ type Order struct {
 type User struct {
 	Id       string `json:"id"`
 	Password string `json:"password"`
-<<<<<<< Updated upstream
 	FirstName string `json:"firstname"`
 	LastName string `json:"lastname"`
-=======
->>>>>>> Stashed changes
 }
 
 type OrderList struct {
