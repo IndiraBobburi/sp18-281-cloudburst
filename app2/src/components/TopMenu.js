@@ -4,6 +4,12 @@ import React, { Component } from 'react';
 import Footer from './Footer.js';
 
 class TopMenu extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            userid:''
+        }
+    }
     gotoHome = () =>{
         this.props.history.push("/");
     }
@@ -24,6 +30,10 @@ class TopMenu extends Component {
     }
     gotoOrders = ()=>{
         this.props.history.push("/orders");
+    }
+    logout = () =>{
+        this.props.history.push("/");
+        localStorage.clear();
     }
   render() {
     return (
@@ -56,6 +66,11 @@ class TopMenu extends Component {
                     <div className="col-md-3">
                         <div>
                             <span onClick={ () =>{this.gotoOrders()}}>ORDERS</span>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div>
+                            <span onClick={ () =>{this.logout()}}>LOGOUT</span>
                         </div>
                     </div>
 
