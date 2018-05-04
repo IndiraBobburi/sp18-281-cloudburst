@@ -82,7 +82,7 @@ func createOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func updateOrder(w http.ResponseWriter, r *http.Request){
-	enableCors(&w)
+	//enableCors(&w)
 
 	var orderid string
 	orderid = r.URL.Query().Get("orderid")
@@ -113,7 +113,7 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func updateOrderList(userid string, orderid string){
-
+enableCors(&w)
 	if orderid != "" {
 		resp, err := queryObjects("orderlist", userid)
 		if err != nil {
@@ -165,6 +165,7 @@ func getOrder(w http.ResponseWriter, r *http.Request){
 }
 
 func getOrders(w http.ResponseWriter, r *http.Request){
+enableCors(&w)
 	if r.Method == "GET" {
 		var userid string
 		userid = r.URL.Query().Get("userid")
