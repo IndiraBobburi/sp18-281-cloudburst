@@ -7,7 +7,7 @@ class TopMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userid:''
+            userid:localStorage.getItem("userId")
         }
     }
     gotoHome = () =>{
@@ -36,48 +36,79 @@ class TopMenu extends Component {
         localStorage.clear();
     }
   render() {
-    return (
-        <div className="row">
-            <div className="col-md-6">
-                <img src="./burger_logo.png"  className="logo"/>
-            </div>
-            <div className="col-md-6 menu-heading">
+        if(localStorage.getItem("userId") != null){
+            return (
                 <div className="row">
-                <div className="col-md-3">
-                    <div>
-                        <span onClick={ () =>{this.gotoHome()}}>HOME</span>
+                    <div className="col-md-6">
+                        <img src="./burger_logo.png"  className="logo"/>
+                    </div>
+                    <div className="col-md-6 menu-heading">
+                        <div className="row">
+                            <span>Welcome {this.state.userid}</span>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-2">
+                                <div>
+                                    <span onClick={ () =>{this.gotoHome()}}>HOME</span>
+                                </div>
+                            </div>
+                            <div className="col-md-2">
+                                <div>
+                                    <span onClick={ () =>{this.gotoMenu()}}>MENU</span>
+                                </div>
+                            </div>
+                            
+                            <div className="col-md-2">
+                                <div>
+                                    <span onClick={ () =>{this.gotoCart()}}>CART</span>
+                                </div>
+                            </div>
+                            <div className="col-md-2">
+                                <div>
+                                    <span onClick={ () =>{this.gotoOrders()}}>ORDERS</span>
+                                </div>
+                            </div>
+                            <div className="col-md-2">
+                                <div>
+                                    <span onClick={ () =>{this.logout()}}>LOGOUT</span>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-                  <div className="col-md-3">
-                      <div>
-                          <span onClick={ () =>{this.gotoMenu()}}>MENU</span>
-                      </div>
-                  </div>
-                  <div className="col-md-3">
-                      <div>
-                          <span onClick={ () =>{this.gotoSignin()}}>SIGN IN</span>
-                      </div>
-                  </div>
-                  <div className="col-md-3">
-                      <div>
-                          <span onClick={ () =>{this.gotoCart()}}>CART</span>
-                      </div>
-                  </div>
-                    <div className="col-md-3">
-                        <div>
-                            <span onClick={ () =>{this.gotoOrders()}}>ORDERS</span>
-                        </div>
+            );
+        }
+        else{
+            return (
+                <div className="row">
+                    <div className="col-md-6">
+                        <img src="./burger_logo.png"  className="logo"/>
                     </div>
-                    <div className="col-md-3">
-                        <div>
-                            <span onClick={ () =>{this.logout()}}>LOGOUT</span>
-                        </div>
+                    <div className="col-md-6 menu-heading">
+                        <div className="row">
+                            <div className="col-md-4">
+                                <div>
+                                    <span onClick={ () =>{this.gotoHome()}}>HOME</span>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <div>
+                                    <span onClick={ () =>{this.gotoMenu()}}>MENU</span>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <div>
+                                    <span onClick={ () =>{this.gotoSignin()}}>SIGN IN</span>
+                                </div>
+                            </div>
+                            </div>
                     </div>
+                </div>
+            );
 
-                 </div>
-            </div>
-        </div>
-    );
+        }
+
   }
 }
 
