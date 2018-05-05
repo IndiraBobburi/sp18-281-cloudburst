@@ -101,9 +101,11 @@ func updateCart(w http.ResponseWriter, r *http.Request) {
 	resp, nil := updateObjects("cart", cart.Id, output, getCluster(cart.Id))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
+	} else {
+		if len(resp.Values) > 0 {
+			w.Write(resp.Values[0].Value)
+		}
 	}
-
-	w.Write(resp.Values[0].Value)
 }
 
 func viewCart(w http.ResponseWriter, r *http.Request) {
@@ -117,9 +119,11 @@ func viewCart(w http.ResponseWriter, r *http.Request) {
 	resp, err := queryObjects("cart", userid, getCluster(userid))
 	if err != nil {
 		log.Println("[RIAK DEBUG] " + err.Error())
+	} else {
+		if len(resp.Values) > 0 {
+			w.Write(resp.Values[0].Value)
+		}
 	}
-
-	w.Write(resp.Values[0].Value)
 }
 
 func deleteCart(w http.ResponseWriter, r *http.Request) {

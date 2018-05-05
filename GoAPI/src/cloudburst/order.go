@@ -107,9 +107,11 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 		newrsp, err := updateObjects("orders", orderid, []byte(output), getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
+		}else {
+			if len(resp.Values) > 0 {
+				w.Write(resp.Values[0].Value)
+			}
 		}
-
-		w.Write(newrsp.Values[0].Value)
 	}
 }
 
@@ -136,7 +138,7 @@ func updateOrderList(userid string, orderid string){
 			log.Println("updateorderlist: json marshal error"+ err.Error())
 		}
 
-		if resp.Values != nil{
+		if resp.Values != nil {
 			_, err = updateObjects("orderlist", userid, []byte(output), getCluster(userid))
 		} else {
 			err = insertObjects("orderlist", userid, []byte(output), getCluster(userid))
@@ -159,9 +161,11 @@ func getOrder(w http.ResponseWriter, r *http.Request){
 		resp, err := queryObjects("orders", orderid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
+		} else {
+			if len(resp.Values) > 0 {
+				w.Write(resp.Values[0].Value)
+			}
 		}
-
-		w.Write(resp.Values[0].Value)
 	}
 }
 

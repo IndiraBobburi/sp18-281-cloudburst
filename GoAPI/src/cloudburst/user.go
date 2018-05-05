@@ -96,9 +96,11 @@ func updateUser(w http.ResponseWriter, r *http.Request){
 		newrsp, err := updateObjects("users", user.Id, []byte(output), getCluster(user.Id))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
+		} else {
+			if len(newrsp.Values) > 0 {
+				w.Write(newrsp.Values[0].Value)
+			}
 		}
-
-		w.Write(newrsp.Values[0].Value)
 	}
 }
 
@@ -111,9 +113,11 @@ func getUser(w http.ResponseWriter, r *http.Request){
 		resp, err := queryObjects("users", userid, getCluster(userid))
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
+		} else {
+			if resp.Values != nil {
+				w.Write(resp.Values[0].Value)
+			}
 		}
-
-		w.Write(resp.Values[0].Value)
 	}
 }
 

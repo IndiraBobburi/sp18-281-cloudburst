@@ -6,6 +6,7 @@ import (
 	"log"
 	"github.com/basho/riak-go-client"
 	"os"
+	"reflect"
 )
 
 var debug = true
@@ -27,6 +28,7 @@ var cluster1 *riak.Cluster
 var cluster2 *riak.Cluster
 
 func initCluster1(){
+	log.Println(reflect.TypeOf(s1))
 	nodeOpts1 := &riak.NodeOptions{
 		RemoteAddress: s1,
 	}
@@ -249,31 +251,34 @@ func updateObjects(bucket string, key string, newval []byte, cluster *riak.Clust
 
 	fvc := cmd.(*riak.FetchValueCommand)
 	rsp := fvc.Response
-	obj := rsp.Values[0]
+	if rsp.Values !=  nil {
+		obj := rsp.Values[0]
 
-	if debug {
-		if obj != nil {
-			log.Println(string(obj.Value))
+		if debug {
+			if obj != nil {
+				log.Println(string(obj.Value))
+			}
 		}
+
+		obj.Value = newval
+
+		cmd, err = riak.NewStoreValueCommandBuilder().
+			WithBucket(bucket).
+			WithKey(key).
+			WithContent(obj).
+			Build()
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err = cluster.Execute(cmd); err != nil {
+			return nil, err
+		}
+
+		return rsp, nil
 	}
-
-	obj.Value = newval
-
-	cmd, err = riak.NewStoreValueCommandBuilder().
-		WithBucket(bucket).
-		WithKey(key).
-		WithContent(obj).
-		Build()
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err = cluster.Execute(cmd); err != nil {
-		return nil, err
-	}
-
-	return rsp, nil
+	return nil, nil
 }
 
 func deleteObjects(bucket string, key string, cluster *riak.Cluster) error{
