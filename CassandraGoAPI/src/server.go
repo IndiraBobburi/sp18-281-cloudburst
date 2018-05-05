@@ -30,7 +30,7 @@ func init() {
   var err error
 
 
-  cluster := gocql.NewCluster("13.56.226.154","18.216.80.30","52.35.81.28")
+  cluster := gocql.NewCluster("/****Cassandra Public IP*****/")
   cluster.Keyspace = "shop"
   cluster.Consistency = gocql.One
   Session, err = cluster.CreateSession()
