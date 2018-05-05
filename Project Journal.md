@@ -9,7 +9,7 @@
 5.Viraj Nilakh<br/>
 
 ## ARCHITECTURE DIAGRAM<br/>
-![Architecture Diagram](Architecture.png)
+![Architecture Diagram](Architecture_new.png)
 
 ## DESCRIPTION:<br/>
 1.The client<br/>
