@@ -113,7 +113,7 @@ componentWillMount(){
             <div className="col-md-8">
                 <div className="login-block">
                     <div className="logo">
-                    <span>
+                    <span className="heading-names">
                         MENU
                     </span>
                     </div>

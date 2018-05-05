@@ -15,9 +15,12 @@ class Orders extends Component {
         var userId = localStorage.getItem("userId");
         API.getAllOrders(userId)
             .then((res) => {
+            if(res.isArray && res.length != 0){
                 console.log(res);
                 self.orders = res;
                 this.setState(self);
+            }
+
             });
     }
   render() {
@@ -70,7 +73,7 @@ class Orders extends Component {
 
                 <div className="login-block">
                     <div className="logo">
-                    <span>
+                    <span className="heading-names">
                         ORDERS
                     </span>
                     </div>

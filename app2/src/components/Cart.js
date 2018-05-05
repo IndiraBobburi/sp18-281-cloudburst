@@ -63,7 +63,7 @@ if(data && data.length!=0){
 
                 <div className="login-block">
                     <div className="logo">
-                    <span>
+                    <span className="heading-names">
                         CART
                     </span>
                     </div>
