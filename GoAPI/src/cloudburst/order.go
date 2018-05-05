@@ -108,8 +108,8 @@ func updateOrder(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			log.Println("[RIAK DEBUG] " + err.Error())
 		}else {
-			if len(resp.Values) > 0 {
-				w.Write(resp.Values[0].Value)
+			if len(newrsp.Values) > 0 {
+				w.Write(newrsp.Values[0].Value)
 			}
 		}
 	}

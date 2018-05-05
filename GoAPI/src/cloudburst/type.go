@@ -29,7 +29,7 @@ type ItemList struct {
 
 type CartItem struct {
 	Id      uint64 `json:"id"` //item id
-	//Name    string `json:name`
+	Name    string `json:name`
 	Quantity uint8 `json:"quantity"`
 }
 
@@ -59,3 +59,14 @@ type User struct {
 type OrderList struct {
 	Orders      []string `json:"orderlist"`
 }
+
+/*
+type Offer struct {
+	Offer      string `json:"offer"`
+	Validity string `json:"validity"`
+}
+
+type OfferList struct {
+	Offers      []string `json:"offerslist"`
+}
+*/

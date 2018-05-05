@@ -94,3 +94,8 @@
 .border-1-black{
   border: gray 1px solid;
 }
+
+.heading-names{
+  font-size: 25px;
+  font-weight: 600
+}
