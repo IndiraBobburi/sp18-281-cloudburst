@@ -32,7 +32,7 @@ class Orders extends Component {
                   itemList.push(
                           <div className="col-md-8">
                               <div>
-                                  {tempItem.id}
+                                  {tempItem.Name}
                               </div>
                               <div>
                                   Qty: {tempItem.quantity}
@@ -47,6 +47,9 @@ class Orders extends Component {
                       <div className="col-md-8 div-res">
                           <div>
                               Restaurant: {temp.restaurantName}
+                          </div>
+                          <div>
+                              Items:
                           </div>
                           <div>
                               {itemList}
@@ -64,7 +67,13 @@ class Orders extends Component {
             <div className="col-md-2">
             </div>
             <div className="col-md-8">
+
                 <div className="login-block">
+                    <div className="logo">
+                    <span>
+                        ORDERS
+                    </span>
+                    </div>
             {ordersList}
                 </div>
             </div>

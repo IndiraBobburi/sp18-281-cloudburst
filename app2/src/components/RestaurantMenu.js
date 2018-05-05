@@ -23,41 +23,41 @@ componentWillMount(){
                            self.cart = res;
                            this.setState(self);
                        });
-                   //this.setState(self);
                });
 
 
 }
 
-    addToCart = (Itemid)=>{
-
+    addToCart = (Itemid, itemName)=>{
         var cart = this.state.cart;
         var new_cart=null;
         var resId = parseInt(localStorage.getItem("ResId"));
         var self = this.state;
         if(resId == cart.restaurantId){
-var items = cart.items;
-var notFound = true;
-for(var i = 0;i<items.length;i++){
-    if(parseInt(items[i].id) === parseInt(Itemid)){
-        items[i].quantity = items[i].quantity + 1;
-        notFound = false;
-    }
+        var items = cart.items;
+        var notFound = true;
+        for(var i = 0;i<items.length;i++){
+            if(parseInt(items[i].id) === parseInt(Itemid)){
+            items[i].quantity = items[i].quantity + 1;
+            notFound = false;
+            }
 }if(notFound == true){
                 cart.items.push({
                     "id": Itemid,
+                    "name" :itemName,
                     "quantity":1
                 });
             }
         }
-
         else{
             cart = {
                 "id": localStorage.getItem("userId"),
                 "restaurantId": resId,
+                "restaurantName": localStorage.getItem("ResName"),
                 "items": [
                     {
                         "id": Itemid,
+                        "name" :itemName,
                         "quantity":1
                     }
                     ]
@@ -73,13 +73,13 @@ for(var i = 0;i<items.length;i++){
             });
 
     }
-    addToCartCheck = (Itemid)=>{
+    addToCartCheck = (Itemid, itemName)=>{
         if(localStorage.getItem("userId") === null){
             alert("Please login before purchase!")
 
         }
         else{
-            this.addToCart(Itemid);
+            this.addToCart(Itemid, itemName);
         }
     }
   render() {
@@ -101,7 +101,7 @@ for(var i = 0;i<items.length;i++){
                       </div>
                   </div>
                   <div className="col-md-4">
-                      <button onClick={ () =>{this.addToCartCheck(temp.id)}}  className="login-button" id="btnLogin" type="button">BUY</button>
+                      <button onClick={ () =>{this.addToCartCheck(temp.id, temp.name)}}  className="login-button" id="btnLogin" type="button">BUY</button>
                   </div>
               </div>
           );
@@ -112,6 +112,11 @@ for(var i = 0;i<items.length;i++){
             </div>
             <div className="col-md-8">
                 <div className="login-block">
+                    <div className="logo">
+                    <span>
+                        MENU
+                    </span>
+                    </div>
                     <div className="padding-top-20">
                         {ResMenu}
                     </div>

@@ -20,8 +20,9 @@ class Menu extends Component {
                 this.setState(self);
             });
     }
-    getMenu = (data) =>{
+    getMenu = (data, name) =>{
         localStorage.setItem("ResId",data)
+        localStorage.setItem("ResName", name)
         this.props.history.push("/Items");
     }
   render() {
@@ -42,7 +43,7 @@ class Menu extends Component {
                      </div>
                  </div>
                  <div className="col-md-4">
-                     <button onClick={ () =>{this.getMenu(temp.id)}}  className="login-button" id="btnLogin" type="button">SELECT</button>
+                     <button onClick={ () =>{this.getMenu(temp.id, temp.name)}}  className="login-button" id="btnLogin" type="button">SELECT</button>
                  </div>
              </div>
           );

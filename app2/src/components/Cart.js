@@ -42,10 +42,10 @@ if(data && data.length!=0){
                         <div className="col-md-8 div-res">
                             <div>
 
-                                Name: {temp.id}
+                                Item: {temp.Name}
                             </div>
                             <div>
-                                Price: {temp.quantity}
+                                Qty: {temp.quantity}
                             </div>
                         </div>
                         <div className="col-md-4">
@@ -60,7 +60,13 @@ if(data && data.length!=0){
             <div className="col-md-2">
             </div>
             <div className="col-md-8">
+
                 <div className="login-block">
+                    <div className="logo">
+                    <span>
+                        CART
+                    </span>
+                    </div>
                     <div className="row border-1-black margin-top-20">
                         <div className="col-md-8 div-res">
                             <div>
