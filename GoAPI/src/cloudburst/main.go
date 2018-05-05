@@ -6,7 +6,6 @@ import (
 	"log"
 	"github.com/basho/riak-go-client"
 	"os"
-	"reflect"
 )
 
 var debug = true
@@ -28,7 +27,6 @@ var cluster1 *riak.Cluster
 var cluster2 *riak.Cluster
 
 func initCluster1(){
-	log.Println(reflect.TypeOf(s1))
 	nodeOpts1 := &riak.NodeOptions{
 		RemoteAddress: s1,
 	}
