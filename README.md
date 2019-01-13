@@ -25,7 +25,7 @@ Technology Stack: KONG/ AMAZON<br/>
 The gateway will redirect the request to appropriate datastore as per the shard key
 
 4.The datastore
-Technology Stack: Cassandra<br/>
+Technology Stack: Riak<br/>
 The customer information will be persisted in the datastores. Each store will be collection of 5 nodes capable of handling network partition.
 
 **AKF Scale Cube**<br/>
